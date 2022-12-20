@@ -4,6 +4,8 @@ export const Div = styled.div`
 color: white;
 font-weight: 800;
 display: flex;
+
+flex-direction: column;
 justify-content: center;
 align-items: center;
 height: 100%;
