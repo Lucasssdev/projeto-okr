@@ -9,14 +9,14 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
-
 model users{
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  email       String?  @unique
+  name        String?
+  email       String  @unique
+  cpf         String?
+  tel         String?
   password    String?
-  permission  Int?
+  permission  String?
 
   // okrs okr[]
 
@@ -33,15 +33,15 @@ model users{
   company company @relation(fields: [companyId], references: [id])
 
   //Cada usuário pertence a uma empresa
-  sector_id String
-  sector sectors @relation(fields: [sector_id], references: [id])
+  //sectors_id String
+  //sector sectors @relation(fields: [sectors_id], references: [id])
 
 }
 
 
 model company{
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
+  name  String?
   cnpj String?
 
   //Cada empresa possui N usuários
@@ -87,10 +87,10 @@ model okrs{
 
 model sectors{
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  name String?
 
   //Cada sector irá possuir vários usuários
-  users users[]
+  //users users[]
 
   //Cada sector irá possuir várias okr's
   okrs okrs[]

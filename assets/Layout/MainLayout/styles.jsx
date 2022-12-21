@@ -25,6 +25,8 @@ export const ContainerMain = styled.div`
        flex-direction: column;
         align-items: center !important;
         width: 100%;
+        padding: 30px 25px;
+        padding-right: 0px !important;
         overflow-y: auto;
         overflow-x: hidden; 
     }

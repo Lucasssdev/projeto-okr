@@ -9,7 +9,7 @@ export const Div = styled.div`
     padding: 15px 15px ;
     border-radius: 5px ;
     padding-left: 5px;
-    background-color  :  ${settingsCss.colorInput} ;
+    background-color  : ${settingsCss.colorThird} ;
     color: ${settingsCss.colorDetails};
     margin-top: 10px;
     

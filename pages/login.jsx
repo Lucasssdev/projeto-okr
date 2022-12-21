@@ -34,12 +34,12 @@ export default function Login() {
 
     const router = useRouter();
 
-    const checkDataFromSubmit = (user)=>{
+    const  checkDataFromSubmit =  async (user)=>{
         
         const {name, password} = user;
 
         if(name == 'Matheus' && password == '123456'){
-            const newToken = GenerateToken(name);
+            const newToken = await GenerateToken(name);
             setCookie('userLogged', newToken);
             return true;
             // router.push('/dashboard');
@@ -52,9 +52,9 @@ export default function Login() {
         return token(name);
     }
 
-    const makeLogin = (user)=>{
+    const makeLogin = async (user)=>{
         
-        if(checkDataFromSubmit(user)){
+        if( await checkDataFromSubmit(user)){
             router.push('/');
         }else{
             console.log('ERRO AO LOGIN')
@@ -82,7 +82,7 @@ export default function Login() {
         <ButtonSubmit Text='Entrar' Icon={faArrowRight} onClick={handleOnLogin}/>
 
         <S.Link>
-            <span>Não tem uma conta? <a href="./register/creaAccont">CADASTRE-SE AQUI</a></span>
+            <span>Não tem uma conta? <a href="./register/createAccount">CADASTRE-SE AQUI</a></span>
             <a href="./register/newPassword">PRECISO DE UMA NOVA SENHA</a>
         </S.Link>
         <button onClick={()=>{makeLogin({name:'Matheus', password: '123456'})}}>CRIAR JWT</button>
