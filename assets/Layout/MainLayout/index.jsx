@@ -19,19 +19,24 @@ import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
 
 export default function MainLayout({ children }) {
-  
-  const router = useRouter()
+  const router = useRouter();
   const [user, setUser] = useState({});
   const appToken = getCookie("userLogged") ?? null;
 
   const payload = async (token) => {
     const payload = await isValid(token);
-    setUser(payload?.user);
+    setUser({
+      id: payload?.user.id,
+      name: payload?.user.name,
+      email: payload?.user.email,
+    });
   };
   useEffect(() => {
     payload(appToken);
-    console.log("USER DATA FROM TOKEN", payload);
   }, []);
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   /* const admin = dados?.admin || false;
     console.log(admin)
@@ -101,12 +106,26 @@ export default function MainLayout({ children }) {
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={''}/>
-            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={''}/>
-            <ButtonMain Icon={faBookBookmark} Text={"Setor"} onClick={()=>{router.push('/a')}}/>
+            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
+            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={""} />
+            <ButtonMain
+              Icon={faBookBookmark}
+              Text={"Setor"}
+              onClick={() => {
+                router.push("/a");
+              }}
+            />
           </div>
           <div>
-            <S.Profile onClick={()=>{router.push('/profile/user')}}> <FontAwesomeIcon icon={faPlusCircle} size="xl" />{user.name}</S.Profile>
+            <S.Profile
+              onClick={() => {
+                router.push("/profile/user");
+              }}
+            >
+              {" "}
+              <FontAwesomeIcon icon={faPlusCircle} size="xl" />
+              {user.name}
+            </S.Profile>
             <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
           </div>
         </S.Options>
@@ -120,7 +139,9 @@ export default function MainLayout({ children }) {
             />
           </S.Search>
           <S.Button>
-            Adicionar OKR
+            <span>
+              Adicionar <strong>OKR</strong>
+            </span>
             <FontAwesomeIcon icon={faPlusCircle} size="xl" />
           </S.Button>
         </S.Header>

@@ -23,11 +23,14 @@ export const Tab = styled.div`
   }
 `;
 export const TabButton = styled.button`
+  transition: 0.7s;
   background-color: transparent;
   width: 30%;
   border: hidden;
   text-align: center;
   text-transform: uppercase;
+  color: ${(props) => props.color};
+  font-size: ${(props) => props.size};
   &:hover {
     color: ${settingsCss.colorDetails};
     cursor: pointer;
@@ -45,14 +48,14 @@ export const ImageDiv = styled.div`
   gap: 25px;
   display: flex;
   padding-top: 60px;
-  a{
+  a {
     text-transform: uppercase;
     font-weight: 400;
     font-size: 16px;
     &:hover {
-    color: ${settingsCss.colorDetails};
-    cursor: pointer;
-  }
+      color: ${settingsCss.colorDetails};
+      cursor: pointer;
+    }
   }
 `;
 export const Image = styled.div`
@@ -63,7 +66,32 @@ export const Image = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  
 `;
-export const Data = styled.div``;
+export const Data = styled.div`
+  input {
+    width: auto;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    color: white;
+    font-weight: 400;
+    font-size: 14px;
+    padding-left: 5px;
+    text {
+      font-weight: 400;
+      font-size: 28px;
+    }
+  }
+`;
+export const DivPass = styled.div`
+  padding: 20px 40px 0px 40px;
+  input {
+    font-size: 18px;
+    width: auto;
+  }
+`;
