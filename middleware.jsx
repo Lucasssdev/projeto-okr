@@ -20,13 +20,13 @@ export async function middleware(request) {
   ];
 
   if (!request.cookies.has("userLogged")) {
-    if (authPages.includes(pathname)) {
+    if (authPages[0].includes(pathname)) {
       request.nextUrl.pathname = pathname;
       return NextResponse.rewrite(request.nextUrl);
     } else {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
-      //return NextResponse.redirect(url);
+      //return NextResponse.redirect(new URL('/login', request.nextUrl))
     }
   } else if (
     request.cookies.has("userLogged") &&
