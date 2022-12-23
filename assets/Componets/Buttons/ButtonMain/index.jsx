@@ -5,9 +5,9 @@ import React from 'react';
 
 
  
-function ButtonMain({Text, Icon}){
+function ButtonMain({Text, Icon, onClick}){
     return(
-        <S.Div>
+        <S.Div onClick={onClick}>
             <S.Border> 
                 {/* Borda lateral para hover/select */} 
             </S.Border>

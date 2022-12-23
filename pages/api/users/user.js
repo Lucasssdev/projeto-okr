@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 
 const createUser = async (users) => {
-  
   let message = [];
   let companyId = users.companyId ?? "";
 
@@ -48,7 +47,7 @@ const createUser = async (users) => {
     users.team.map(async (user, index) => {
       const newUser = {
         email: user.email,
-        nome: user.email.split('@')[0],
+        nome: user.email.split("@")[0],
         company: companyId,
         password: await bcrypt.hash("okr", 4),
         permission: "3",
@@ -92,7 +91,7 @@ const getAllUsers = async (companyId) => {
     //include:{ company: true,}
   });
   //await prisma.$disconnect();
-  
+
   return users;
 };
 const getUser = async (id) => {
@@ -104,69 +103,82 @@ const getUser = async (id) => {
       id,
     },
   });
+  await prisma.$disconnect();
 
   return user;
 };
 const deleteUser = async (id) => {
-  let message = ""
-  
-  await prisma.$connect();    
-  await prisma.users.delete({      
-       where: {         
-          id      
-      }     
-  })     
-  .then(async () => {         
-      console.log("Response from prisma ")         
-      await prisma.$disconnect() 
-      message =  'Usuario deletado' 
-      console.log('---',message)  
-  }).catch(async (e) => {         
-      console.error(e)         
-      await prisma.$disconnect()         
-      
-      message =  'Falha ao deletar' 
-      console.log('---',message)  
-  })          
-      
-  return message
-};
-const updateUser = async ( user ) => {
-  let message = ""
-  const updateData = user.data
-  for(let data in updateData){
-    if(updateData[data] === null){
-      delete updateData[data];
+  let message = [];
+  try {
+    await prisma.$connect();
+    const user = await prisma.users.delete({
+      where: {
+        id,
+      },
+    });
+    message[0] = "Usuário " + user.name + " deletado com sucesso!";
+
+    console.log(user);
+    if (user.permission == "1") {
+      try {
+        const company = await prisma.company.delete({
+          where: {
+            id: user.companyId,
+          },
+        });
+        message[1] = company.name + " deletada com sucesso junto ao admin!";
+      } catch {
+        async (e) => {
+          console.error(e);
+          await prisma.$disconnect();
+
+          message[1] = "Falha ao deletar empresa";
+        };
+      }
     }
-    if(data == 'password')
-      updateData[data] = await bcrypt.hash(data, 8)
+  } catch {
+    async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+
+      message[0] = "Falha ao deletar";
+      console.log("---", message);
+    };
   }
+
+  return message;
+};
+const updateUser = async (user) => {
+  let message = "";
+
+  if (user.password) await bcrypt.hash(user.password, 8);
+
   await prisma.$connect();
-   await prisma.users.update({
-    where: {
-      id: user.id
-    },
-    data: {
-      ...updateData
-    }
-  })
-  .then(async () => {
-      console.log("Response from prisma ")
-      await prisma.$disconnect()
-      message = 'Alterado com sucesso'
-  })
-  .catch(async (e) => {
-      console.error(e)
-      await prisma.$disconnect()
-      message = 'Falha ao alterar'
-      process.exit(1)
-      
-  })
-  return message
-}
+  await prisma.users
+    .update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        [Object.keys(user)[1]] : user[[Object.keys(user)[1]]],
+      },
+    })
+    .then(async () => {
+      console.log("Response from prisma ");
+      await prisma.$disconnect();
+      message = "Alterado com sucesso";
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      message = "Falha ao alterar";
+      process.exit(1);
+    });
+  return message;
+};
 
 export default async function handler(request, response) {
-  console.log(request.body, "REQ");
+  console.log(request, "REQ");
   const method = request.method;
 
   if (method == "POST") {
@@ -177,14 +189,14 @@ export default async function handler(request, response) {
       const users = await getAllUsers(request.body.companyId);
       response.status(200).json(users);
     } else {
-      const user = await getUser(request.body.id);
+      const user = await getUser(request.query.id);
       response.status(200).json(user);
     }
   } else if (method == "DELETE") {
     const message = await deleteUser(request.body.id);
     response.status(200).json(message);
   } else if (method == "PUT") {
-    const message = await updateUser(request.body);
+    const message = await updateUser(request.body.data);
     response.status(200).json(message);
   } else {
     response.status(404).json("Não encontrado");

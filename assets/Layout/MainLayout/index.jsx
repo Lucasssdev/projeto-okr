@@ -1,20 +1,44 @@
 /* eslint-disable react/prop-types */
 import * as S from "./styles";
-import React from "react";
-import logoPurple from '../../../public/logoPurple.svg'
+import React, { useEffect, useState } from "react";
+import logoPurple from "../../../public/logoPurple.svg";
 import Image from "next/image";
 import ButtonMain from "../../Componets/Buttons/ButtonMain";
-import  InputSearch from "../../Componets/Inputs/InputSearch";
-import {faBuilding, faHouse, faBookBookmark, faSignIn,faMagnifyingGlass, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
+import InputSearch from "../../Componets/Inputs/InputSearch";
+import {
+  faBuilding,
+  faHouse,
+  faBookBookmark,
+  faSignIn,
+  faMagnifyingGlass,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getCookie } from "cookies-next";
+import { isValid } from "../../../src/jwt/isValidToken";
+import { useRouter } from "next/router";
 
-export default function MainLayout( {children} ) {
-    
-    /*const appToken = Cookies.get('application-token');
-    const dados = jwt.decode(appToken);
-    console.log('USER DATA FROM TOKEN', dados   )
+export default function MainLayout({ children }) {
+  const router = useRouter();
+  const [user, setUser] = useState({});
+  const appToken = getCookie("userLogged") ?? null;
 
-    const admin = dados?.admin || false;
+  const payload = async (token) => {
+    const payload = await isValid(token);
+    setUser({
+      id: payload?.user.id,
+      name: payload?.user.name,
+      email: payload?.user.email,
+    });
+  };
+  useEffect(() => {
+    payload(appToken);
+  }, []);
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  /* const admin = dados?.admin || false;
     console.log(admin)
     const empresa = dados?.company || null;
 
@@ -74,35 +98,56 @@ export default function MainLayout( {children} ) {
              
     }
     */
-    return (
-        <S.Container>
-            <S.Main>
-            <S.Logo>
-                <Image width={250}  src={logoPurple} alt='logo'/>
-            </S.Logo>
-            <S.Options>
-                <div>
-                    <ButtonMain Icon={faHouse} Text={"Inicio"}/>                    
-                    <ButtonMain Icon={faBuilding} Text={"Empresa"}/>
-                    <ButtonMain Icon={faBookBookmark} Text={"Setor"}/>
-                    
-                </div>
-                <div>
-                    <a>Nome user</a>
-                    <ButtonMain Icon={faSignIn} Text={'Sair do Gestor OKR'}/>
-                </div>
-            </S.Options>
-            </S.Main>
-            <S.ContainerMain>
-                <S.Header>
-                    <S.Search>
-                        <InputSearch Placeholder="Pesquisao OKR ou Setor" Icon={faMagnifyingGlass}/>
-                    </S.Search>
-                    <S.Button>Adicionar OKR<FontAwesomeIcon icon={faPlusCircle} size="xl"/></S.Button>
-                </S.Header>
-                {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */ }
-                <article>{children}</article>
-            </S.ContainerMain>
-        </S.Container>
-    );
+  return (
+    <S.Container>
+      <S.Main>
+        <S.Logo>
+          <Image width={250} src={logoPurple} alt="logo" />
+        </S.Logo>
+        <S.Options>
+          <div>
+            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
+            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={""} />
+            <ButtonMain
+              Icon={faBookBookmark}
+              Text={"Setor"}
+              onClick={() => {
+                router.push("/a");
+              }}
+            />
+          </div>
+          <div>
+            <S.Profile
+              onClick={() => {
+                router.push("/profile/user");
+              }}
+            >
+              {" "}
+              <FontAwesomeIcon icon={faPlusCircle} size="xl" />
+              {user.name}
+            </S.Profile>
+            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
+          </div>
+        </S.Options>
+      </S.Main>
+      <S.ContainerMain>
+        <S.Header>
+          <S.Search>
+            <InputSearch
+              Placeholder="Pesquisao OKR ou Setor"
+              Icon={faMagnifyingGlass}
+            />
+          </S.Search>
+          <S.Button>
+            <span>
+              Adicionar <strong>OKR</strong>
+            </span>
+            <FontAwesomeIcon icon={faPlusCircle} size="xl" />
+          </S.Button>
+        </S.Header>
+        {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
+        <article>{children}</article>
+      </S.ContainerMain>
+    </S.Container>
+  );
 }
