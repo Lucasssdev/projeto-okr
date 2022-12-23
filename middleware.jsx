@@ -20,7 +20,7 @@ export async function middleware(request) {
   ];
 
   if (!request.cookies.has("userLogged")) {
-    if (authPages[0].includes(pathname)) {
+    if (authPages.includes(pathname)) {
       request.nextUrl.pathname = pathname;
       return NextResponse.rewrite(request.nextUrl);
     } else {

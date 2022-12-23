@@ -95,7 +95,6 @@ console.log(login)  }, [login]);
           </span>
           <a href="./register/newPassword">PRECISO DE UMA NOVA SENHA</a>
         </S.Link>
-        <button>CRIAR JWT</button>
       </section>
     </S.Container>
   );

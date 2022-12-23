@@ -16,23 +16,22 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
+import { useRouter } from "next/router";
 
-export default  function MainLayout({ children } ) {
- 
-    const [user,setUser] = useState({})
-    const appToken = getCookie("userLogged") ?? null;
+export default function MainLayout({ children }) {
+  
+  const router = useRouter()
+  const [user, setUser] = useState({});
+  const appToken = getCookie("userLogged") ?? null;
 
-    const payload = async(token) => {
-        const payload = await isValid(token);
-        setUser(payload?.user)
-    }
-    useEffect(()=>{
-        payload(appToken)
-        console.log("USER DATA FROM TOKEN", payload);
-    },[])
-    
-    
-    
+  const payload = async (token) => {
+    const payload = await isValid(token);
+    setUser(payload?.user);
+  };
+  useEffect(() => {
+    payload(appToken);
+    console.log("USER DATA FROM TOKEN", payload);
+  }, []);
 
   /* const admin = dados?.admin || false;
     console.log(admin)
@@ -102,12 +101,12 @@ export default  function MainLayout({ children } ) {
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} />
-            <ButtonMain Icon={faBuilding} Text={"Empresa"} />
-            <ButtonMain Icon={faBookBookmark} Text={"Setor"} />
+            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={''}/>
+            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={''}/>
+            <ButtonMain Icon={faBookBookmark} Text={"Setor"} onClick={()=>{router.push('/a')}}/>
           </div>
           <div>
-            <a>{user.name}</a>
+            <S.Profile onClick={()=>{router.push('/profile/user')}}> <FontAwesomeIcon icon={faPlusCircle} size="xl" />{user.name}</S.Profile>
             <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
           </div>
         </S.Options>
