@@ -43,7 +43,9 @@ model company{
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name  String?
   cnpj String?
-
+  tel String?
+  instagram String?
+  address String?
   //Cada empresa possui N usuários
   users users[]
 

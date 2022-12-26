@@ -130,6 +130,11 @@ export const Logo = styled.image`
     background: transparent;
   }
 `;
+export const Footer = styled.div`
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
+`;
 export const Profile = styled.button`
   font-weight: 400;
   font-size: 14px;

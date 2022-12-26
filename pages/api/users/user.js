@@ -150,9 +150,6 @@ const deleteUser = async (id) => {
 };
 const updateUser = async (user) => {
   let message = "";
-
-  if (user.password) await bcrypt.hash(user.password, 8);
-
   await prisma.$connect();
   await prisma.users
     .update({
@@ -178,7 +175,7 @@ const updateUser = async (user) => {
 };
 
 export default async function handler(request, response) {
-  console.log(request, "REQ");
+  console.log(request.body, "REQ");
   const method = request.method;
 
   if (method == "POST") {

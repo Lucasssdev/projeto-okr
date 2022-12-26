@@ -39,7 +39,6 @@ export default function Login() {
         withCredentials: true,
       })
       .then(function (response) {
-        console.log('+++',response)
         setCookie("userLogged", response.data);
         verifyIfCookieExists()
       })

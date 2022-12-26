@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 export default function MainLayout({ children }) {
   const router = useRouter();
   const [user, setUser] = useState({});
+  const [company, setCompany] = useState({});
   const appToken = getCookie("userLogged") ?? null;
 
   const payload = async (token) => {
@@ -30,6 +31,10 @@ export default function MainLayout({ children }) {
       name: payload?.user.name,
       email: payload?.user.email,
     });
+    setCompany({
+      id: payload?.user.company.id,
+      name: payload?.user.company.name,
+    })
   };
   useEffect(() => {
     payload(appToken);
@@ -107,7 +112,6 @@ export default function MainLayout({ children }) {
         <S.Options>
           <div>
             <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
-            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={""} />
             <ButtonMain
               Icon={faBookBookmark}
               Text={"Setor"}
@@ -116,7 +120,16 @@ export default function MainLayout({ children }) {
               }}
             />
           </div>
-          <div>
+          <S.Footer>
+          <S.Profile
+              onClick={() => {
+                router.push("/profile/company");
+              }}
+            >
+              {" "}
+              <FontAwesomeIcon icon={faBuilding} size="xl" />
+              {company.name}
+            </S.Profile>
             <S.Profile
               onClick={() => {
                 router.push("/profile/user");
@@ -127,7 +140,7 @@ export default function MainLayout({ children }) {
               {user.name}
             </S.Profile>
             <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
-          </div>
+          </S.Footer>
         </S.Options>
       </S.Main>
       <S.ContainerMain>
