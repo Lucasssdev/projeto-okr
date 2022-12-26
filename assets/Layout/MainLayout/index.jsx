@@ -17,6 +17,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
+import { deleteCookie } from "cookies-next";
+
+
+
 
 export default function MainLayout({ children }) {
   const router = useRouter();
@@ -36,6 +40,11 @@ export default function MainLayout({ children }) {
       name: payload?.user.company.name,
     })
   };
+
+  const logout = () => {
+    deleteCookie('userLogged')
+    router.push('/login')
+  }
   useEffect(() => {
     payload(appToken);
   }, []);
@@ -139,7 +148,7 @@ export default function MainLayout({ children }) {
               <FontAwesomeIcon icon={faPlusCircle} size="xl" />
               {user.name}
             </S.Profile>
-            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
+            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} onClick={logout} />
           </S.Footer>
         </S.Options>
       </S.Main>
