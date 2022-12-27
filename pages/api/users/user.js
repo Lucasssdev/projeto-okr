@@ -4,47 +4,48 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 
 const createUser = async (users) => {
-  let message = [];
+  let message = '';
   let companyId = users.companyId ?? "";
 
   await prisma.$connect();
 
   if (users.adm) {
-    try {
+    console.log(users.adm)
+    try{
       users.adm.password = await bcrypt.hash(users.adm.password, 8);
-      const { name, email, cpf, tel, password, permission } = users.adm;
       const newAdm = await prisma.users.create({
         data: {
-          name,
-          email,
-          cpf,
-          tel,
-          password,
-          permission,
+          name: users.adm.name,
+          email: users.adm.email,
+          cpf: users.adm.cpf,
+          tel: users.adm.tel,
+          password: users.adm.password,
+          permission: users.adm.permission,
           company: {
             create: {
               name: users.adm.company,
             },
           },
         },
-      });
+      })
 
-      message[0] = "Admin cadastrado com sucesso! ";
+      
       console.log(message);
-      companyId = newAdm.companyId;
+     
       await prisma.$disconnect();
+      return newAdm
     } catch {
       async (e) => {
         console.error(e);
-        message[0] = "falha ao cadastrar Admin ! ";
+        message = "falha ao cadastrar Admin!";
         console.log(message);
         await prisma.$disconnect();
         process.exit(1);
       };
     }
   }
-  if (users.team.length > 0) {
-    users.team.map(async (user, index) => {
+  if (users.team) {
+    users.team.map(async (user) => {
       const newUser = {
         email: user.email,
         name: user.email.split("@")[0],
@@ -64,13 +65,13 @@ const createUser = async (users) => {
           },
         })
         .then(async () => {
-          message[index + 1] = newUser.email + " cadastrado com sucesso! ";
+          message= newUser.email + " cadastrado com sucesso! ";
           console.log(message);
           await prisma.$disconnect();
         })
         .catch(async (e) => {
           console.error(e);
-          message[index + 1] = "Falha ao cadastrar " + newUser.email;
+          message = "Falha ao cadastrar " + newUser.email;
           console.log(message);
           await prisma.$disconnect();
           process.exit(1);
@@ -179,7 +180,8 @@ export default async function handler(request, response) {
   const method = request.method;
 
   if (method == "POST") {
-    const message = await createUser(request.body);
+    const message = await createUser(request.body.data);
+    console.log(message,'****')
     response.status(200).json(message);
   } else if (method == "GET") {
     if (request.query.companyId) {

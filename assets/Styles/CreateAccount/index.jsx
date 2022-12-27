@@ -6,16 +6,16 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap:100px;
+    gap: 50px;
     max-height: 300px;
+    
   
     section{
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
-        justify-content: center;
-        max-height: 700px;
+        
     }
     
 `  
