@@ -10,16 +10,17 @@ import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "../../assets/Layout/GuestLayout/Componets/Header";
 import { useRouter } from "next/router";
-
+import axios from "axios";
 export default function InviteTeam() {
   const router = useRouter();
   const companyId = router.query;
   console.log(companyId);
 
   const [emails, setEmails] = useState({
-    firstEmail:'',
-    secondEmail: ''
+    firstEmail: "",
+    secondEmail: "",
   });
+  const [team, setTeam] = useState([]);
 
   const handleOnChange = (e) => {
     const value = e.target.value;
@@ -33,16 +34,39 @@ export default function InviteTeam() {
 
   const newField = () => {
     //função para novo campo input
-
-   
     setEmails({
-        ...emails,
-        [Math.random()]: "aa",
+      ...emails,
+      [Math.random()]: "",
     });
   };
-  
+
   const handleInviteTeam = () => {
-    null;
+    for (let data in emails) {
+      console.log(data);
+      let arr = team;
+      arr.push(emails[data]);
+      setTeam(arr);
+      console.log(team);
+    }
+
+    axios
+      .post("../api/Users/user", {
+        data: {
+          team,
+          companyId
+        },
+      })
+      .then(async function (response) {
+        console.log(response);
+        if (response.status == 200) {
+          
+          console.log(response)
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        //router.push("/login");
+      });
   };
   useEffect(() => {
     console.log(emails);
@@ -50,7 +74,7 @@ export default function InviteTeam() {
 
   return (
     <S.Container>
-      <Header 
+      <Header
         Title="Crie sua conta"
         SubTitle="Sua alta performance te aguarda no lado da produtividade!"
       />
@@ -58,22 +82,19 @@ export default function InviteTeam() {
         <S.DivInput>
           <>
             {Object.keys(emails).map((field) => (
-             console.log(field,'--',emails),
-         
-
               <Input
                 Placeholder={"Digite o e-mail do seu colega de trabalho"}
                 Icon={faEnvelope}
-                Type={"email"} 
-                onChange={handleOnChange}  
+                Type={"email"}
+                onChange={handleOnChange}
                 Id={field}
-                Value={emails.field }
-              />  
-            ))} 
+                Value={emails.field}
+              />
+            ))}
           </>
         </S.DivInput>
-  
-        <S.NewField> 
+
+        <S.NewField>
           {
             <button onClick={newField}>
               <FontAwesomeIcon icon={faPlusCircle} size="3x" />

@@ -4,14 +4,13 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 
 const createUser = async (users) => {
-  let message = '';
-  let companyId = users.companyId ?? "";
+  let message = "";
 
   await prisma.$connect();
 
   if (users.adm) {
-    console.log(users.adm)
-    try{
+    console.log(users.adm);
+    try {
       users.adm.password = await bcrypt.hash(users.adm.password, 8);
       const newAdm = await prisma.users.create({
         data: {
@@ -27,13 +26,12 @@ const createUser = async (users) => {
             },
           },
         },
-      })
+      });
 
-      
       console.log(message);
-     
+
       await prisma.$disconnect();
-      return newAdm
+      return newAdm;
     } catch {
       async (e) => {
         console.error(e);
@@ -45,17 +43,21 @@ const createUser = async (users) => {
     }
   }
   if (users.team) {
-    users.team.map(async (user) => {
-      const newUser = {
-        email: user.email,
-        name: user.email.split("@")[0],
-        company: companyId,
-        password: await bcrypt.hash("okr", 4),
-        permission: "3",
-      };
+   //console.log(users.companyId);
+    
+    try {
+      const usersTeam = [];
+      users.team.map(async (email) => {
+        console.log(email);
+        const newUser = {
+          email: email,
+          name: email.split("@")[0],
+          company: users.companyId.companyId,
+          password: await bcrypt.hash("okr", 4),
+          permission: "3",
+        };
 
-      await prisma.users
-        .create({
+        const user = await prisma.users.create({
           data: {
             email: newUser.email,
             name: newUser.name,
@@ -63,20 +65,24 @@ const createUser = async (users) => {
             password: newUser.password,
             permission: newUser.permission,
           },
-        })
-        .then(async () => {
-          message= newUser.email + " cadastrado com sucesso! ";
-          console.log(message);
-          await prisma.$disconnect();
-        })
-        .catch(async (e) => {
-          console.error(e);
-          message = "Falha ao cadastrar " + newUser.email;
-          console.log(message);
-          await prisma.$disconnect();
-          process.exit(1);
         });
-    });
+
+        usersTeam.push(user)
+        console.log('ARray--',usersTeam);
+        await prisma.$disconnect();
+      });
+      console.log('array--',usersTeam);
+      //obs: nao está retornando UsersTeam
+      return usersTeam
+    } catch {
+      async (e) => {
+        console.error(e);
+        message = "Falha ao cadastrar ";
+        console.log(message);
+        await prisma.$disconnect();
+        process.exit(1);
+      };
+    }
   }
 
   return message;
@@ -158,7 +164,7 @@ const updateUser = async (user) => {
         id: user.id,
       },
       data: {
-        [Object.keys(user)[1]] : user[[Object.keys(user)[1]]],
+        [Object.keys(user)[1]]: user[[Object.keys(user)[1]]],
       },
     })
     .then(async () => {
@@ -181,7 +187,7 @@ export default async function handler(request, response) {
 
   if (method == "POST") {
     const message = await createUser(request.body.data);
-    console.log(message,'****')
+    console.log(message, "****");
     response.status(200).json(message);
   } else if (method == "GET") {
     if (request.query.companyId) {
