@@ -6,42 +6,58 @@ import axios from "axios";
 import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
 import { getCookie } from "cookies-next";
+import UserItem from "../../assets/Componets/UserItem";
 
 export default function ProfileUser() {
   // const router = useRouter();
   const [tab, setTab] = useState(1);
+  const [team, setTeam] = useState([]);
   const [company, setCompany] = useState({
-    id : '',    
-    name  : '',
-    cnpj : '',
-    tel : '',
-    instagram : '',
-    address : '',
+    id: "",
+    name: "",
+    cnpj: "",
+    tel: "",
+    instagram: "",
+    address: "",
   });
- 
+
   const appToken = getCookie("userLogged") ?? null;
 
   const Payload = async (token) => {
     const payload = await isValid(token);
-    console.log(payload.user,'++')
-    getCompany(payload.user.company.id)
-    
+    console.log(payload.user, "++");
+    getCompany(payload.user.company.id);
+    getTeam(payload.user.company.id);
   };
 
   const getCompany = (id) => {
-    console.log(id,'ID')
-    axios.get("../api/Company/company?id="+id
-
-    ).then(function (response) {
-        if(response.status === 200){ 
-            setCompany(response.data)
-            console.log(response.data)
-            
+    console.log(id, "ID");
+    axios
+      .get("../api/Company/company?id=" + id)
+      .then(function (response) {
+        if (response.status === 200) {
+          setCompany(response.data);
+          console.log(response.data);
         }
-    }).catch(error => {return error, console.log('nao foii')}); 
-            
-    }
-
+      })
+      .catch((error) => {
+        return error, console.log("nao foii");
+      });
+  };
+  const getTeam = (id) => {
+    console.log(id, "ID");
+    axios
+      .get("../api/Users/user?companyId=" + id)
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log(response.data);
+          setTeam(response.data);
+        }
+      })
+      .catch((error) => {
+        return error, console.log("nao foii");
+      });
+  };
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
@@ -67,13 +83,12 @@ export default function ProfileUser() {
       });
   };
 
-  
   useEffect(() => {
     Payload(appToken);
   }, []);
   useEffect(() => {
-    console.log(company);
-  }, [company]);
+    console.log(team);
+  }, [team]);
   return (
     <S.Container>
       <S.Tab>
@@ -113,7 +128,12 @@ export default function ProfileUser() {
       </S.Tab>
       {tab == 1 ? (
         <S.Profile>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cum ab possimus deleniti expedita optio dolor vero libero, magni ea cumque, illum cupiditate omnis dolorem sequi enim dolorum iure tempore aliquam!</p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cum ab
+            possimus deleniti expedita optio dolor vero libero, magni ea cumque,
+            illum cupiditate omnis dolorem sequi enim dolorum iure tempore
+            aliquam!
+          </p>
           <S.Data>
             <EditInput
               onBlur={() => submitData("name")}
@@ -161,10 +181,23 @@ export default function ProfileUser() {
             />
           </S.Data>
         </S.Profile>
-      ) : tab == 2 ?  (
-        <S.DivPass>
-          
-        </S.DivPass>
+      ) : tab == 2 ? (
+        <S.MyTeam>
+          <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum eligendi provident alias facere dolor. Recusandae fugit, similique explicabo harum vel sapiente eius qui architecto, reiciendis, alias impedit nostrum? In, distinctio?</span>
+         <section>
+          <S.ListTeam>
+            {
+              team.map((user, key) => (
+                <UserItem user={user} key={key}/>
+              ))
+            }
+          </S.ListTeam>
+          <S.Invite>
+            oioioio
+          </S.Invite>
+          </section>
+        </S.MyTeam>
+       
       ) : null}
     </S.Container>
   );

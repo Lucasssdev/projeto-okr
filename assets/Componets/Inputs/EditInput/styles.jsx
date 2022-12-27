@@ -12,7 +12,7 @@ export const Div = styled.div`
   border-radius: 5px;
   padding-left: 5px;
   color: ${settingsCss.colorDetails};
-  margin-top: 10px;
+  margin-top: 20px;
   div {
     display: flex;
     gap: 5px;

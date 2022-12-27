@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isValid } from './src/jwt/isValidToken';
+import { deleteCookie } from "cookies-next";
 
 export async function middleware(request) {
   const cookie = request.cookies.get('userLogged')?.value ?? '';
@@ -34,8 +35,8 @@ export async function middleware(request) {
   //   console.log('quero fazer o logout');
   //   return NextResponse.redirect(new URL('/login', request.url))
   // }
-
-  if(await isValid(cookie) && request.cookies.has('userLogged') ){
+  
+  if(await isValid(cookie) && request.cookies.has('userLogged')  ){
     if(!authPages.includes(pathname)){
       return NextResponse.next();
     }else{
@@ -43,5 +44,9 @@ export async function middleware(request) {
       // request.nextUrl.pathname ='/dashboard';
       return NextResponse.redirect(new URL('/', request.url))
     }
+  }else{
+    deleteCookie('userLogged')
+    return NextResponse.redirect(new URL('/login', request.url))
+
   }
 }

@@ -47,7 +47,7 @@ const createUser = async (users) => {
     users.team.map(async (user, index) => {
       const newUser = {
         email: user.email,
-        nome: user.email.split("@")[0],
+        name: user.email.split("@")[0],
         company: companyId,
         password: await bcrypt.hash("okr", 4),
         permission: "3",
@@ -57,7 +57,7 @@ const createUser = async (users) => {
         .create({
           data: {
             email: newUser.email,
-            nome: newUser.name,
+            name: newUser.name,
             companyId: newUser.company,
             password: newUser.password,
             permission: newUser.permission,
@@ -90,7 +90,7 @@ const getAllUsers = async (companyId) => {
     },
     //include:{ company: true,}
   });
-  //await prisma.$disconnect();
+  await prisma.$disconnect();
 
   return users;
 };
@@ -182,8 +182,8 @@ export default async function handler(request, response) {
     const message = await createUser(request.body);
     response.status(200).json(message);
   } else if (method == "GET") {
-    if (request.body.companyId) {
-      const users = await getAllUsers(request.body.companyId);
+    if (request.query.companyId) {
+      const users = await getAllUsers(request.query.companyId);
       response.status(200).json(users);
     } else {
       const user = await getUser(request.query.id);

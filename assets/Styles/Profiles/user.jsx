@@ -105,4 +105,7 @@ export const DivPass = styled.div`
 
     }
   }
+  button{
+    width:  500px;
+  }
 `;

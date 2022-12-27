@@ -2,13 +2,16 @@ import styled from "styled-components";
 import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div`
-  width: 90%;
-  height: 100vh;
+  width: 95%;
+  height: 200vh;
+  
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   background-color: ${settingsCss.colorPrimary};
   display: grid;
   grid-template-rows: 60px auto;
+  padding: 15px 15px 0px 15px;
+  
 `;
 export const Tab = styled.div`
   width: 100%;
@@ -20,12 +23,14 @@ export const Tab = styled.div`
     display: flex;
     justify-content: center;
     border-right: 2px solid ${settingsCss.colorSecond} !important;
+    :last-child{    border-right: none !important;
+}
   }
 `;
 export const TabButton = styled.button`
   transition: 0.7s;
   background-color: transparent;
-  width: 70%;
+  width:100%;
   border: hidden;
   text-align: center;
   text-transform: uppercase;
@@ -48,9 +53,11 @@ export const Profile = styled.div`
 export const Data = styled.div`
   input {
     width: 900px;
+    
   }
-
+  
   span {
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -60,27 +67,31 @@ export const Data = styled.div`
     font-weight: 400;
     font-size: 14px;
     padding-left: 5px;
+    width: auto;
     text {
       font-weight: 400;
       font-size: 28px;
     }
   }
 `;
-export const DivPass = styled.div`
-  padding: 20px 40px 0px 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  input {
-    background-color: ${settingsCss.colorThird};
-    font-size: 16px;
-    width: 40vw;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    ::placeholder{
-      color: #999999;
-
-    }
+export const MyTeam = styled.div`
+  display: grid;
+  grid-template-rows: 80px auto;
+  span{
+    padding: 0px 25px;
   }
+  section{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 70% auto;
+  }
+  
+
 `;
+export const ListTeam = styled.ul`
+
+`
+export const Invite = styled.div`
+ background-color: black;
+`

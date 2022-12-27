@@ -116,7 +116,7 @@ export default function MainLayout({ children }) {
     <S.Container>
       <S.Main>
         <S.Logo>
-          <Image width={250} src={logoPurple} alt="logo" />
+          <Image width={200} src={logoPurple} alt="logo" />
         </S.Logo>
         <S.Options>
           <div>

@@ -7,16 +7,14 @@ export const Container = styled.div`
   background: ${settingsCss.colorSecond};
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 280px auto;
-  align-items: center;
-  overflow-y: auto;
+  grid-template-columns: 220px auto;
+  overflow-y: hidden;
 `;
 
 export const ContainerMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  display: grid;
+  grid-template-rows: auto auto;
+ 
   height: 100vh;
   article {
     display: flex;
@@ -84,10 +82,11 @@ export const Options = styled.div`
   }
 `;
 export const Header = styled.div`
-  width: calc(100vw - 280px);
+  width: 100%;
   height: 85px !important;
   display: flex;
   justify-content: space-between;
+
   align-items: center;
   background: ${settingsCss.colorPrimary};
   padding: 40px 30px;
