@@ -3,7 +3,8 @@ import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div`
   width: 90%;
-  height: 100vh;
+  height: 500vh;
+  margin-top: 30px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   background-color: ${settingsCss.colorPrimary};
@@ -90,8 +91,22 @@ export const Data = styled.div`
 `;
 export const DivPass = styled.div`
   padding: 20px 40px 0px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   input {
-    font-size: 18px;
-    width: auto;
+    background-color: ${settingsCss.colorThird};
+    font-size: 16px;
+    width: 40vw;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    ::placeholder{
+      color: #999999;
+
+    }
+  }
+  button{
+    width:  500px;
   }
 `;

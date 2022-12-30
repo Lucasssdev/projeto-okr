@@ -13,6 +13,5 @@ export async function token(user) {
                 .setNotBefore(iat)
                 .sign(secret)
     
-                console.log(jwt)
     return jwt;
 }

@@ -2,25 +2,26 @@ import { PrismaClient } from "@prisma/client";
 //import axios from "axios";
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+
 
 const createUser = async (users) => {
-  let message = [];
-  let companyId = users.companyId ?? "";
+  let message = "";
 
   await prisma.$connect();
 
   if (users.adm) {
+    console.log(users.adm);
     try {
       users.adm.password = await bcrypt.hash(users.adm.password, 8);
-      const { name, email, cpf, tel, password, permission } = users.adm;
       const newAdm = await prisma.users.create({
         data: {
-          name,
-          email,
-          cpf,
-          tel,
-          password,
-          permission,
+          name: users.adm.name,
+          email: users.adm.email,
+          cpf: users.adm.cpf,
+          tel: users.adm.tel,
+          password: users.adm.password,
+          permission: users.adm.permission,
           company: {
             create: {
               name: users.adm.company,
@@ -29,53 +30,60 @@ const createUser = async (users) => {
         },
       });
 
-      message[0] = "Admin cadastrado com sucesso! ";
       console.log(message);
-      companyId = newAdm.companyId;
+
       await prisma.$disconnect();
+      return newAdm;
     } catch {
       async (e) => {
         console.error(e);
-        message[0] = "falha ao cadastrar Admin ! ";
+        message = "falha ao cadastrar Admin!";
         console.log(message);
         await prisma.$disconnect();
         process.exit(1);
       };
     }
   }
-  if (users.team.length > 0) {
-    users.team.map(async (user, index) => {
-      const newUser = {
-        email: user.email,
-        nome: user.email.split("@")[0],
-        company: companyId,
-        password: await bcrypt.hash("okr", 4),
-        permission: "3",
-      };
+  if (users.team) {
+   //console.log(users.companyId);
+    let registered = 0
+    try {
+     
+      users.team.map(async (email) => {
+        console.log(email);
+        const newUser = {
+          email: email,
+          name: email.split("@")[0],
+          company: users.companyId,
+          password: crypto.randomBytes(4).toString("hex"),
+          permission: "3",
+        };
 
-      await prisma.users
-        .create({
+         await prisma.users.create({
           data: {
             email: newUser.email,
-            nome: newUser.name,
+            name: newUser.name,
             companyId: newUser.company,
             password: newUser.password,
             permission: newUser.permission,
           },
-        })
-        .then(async () => {
-          message[index + 1] = newUser.email + " cadastrado com sucesso! ";
-          console.log(message);
-          await prisma.$disconnect();
-        })
-        .catch(async (e) => {
-          console.error(e);
-          message[index + 1] = "Falha ao cadastrar " + newUser.email;
-          console.log(message);
-          await prisma.$disconnect();
-          process.exit(1);
         });
-    });
+
+       registered++
+        await prisma.$disconnect();
+      });
+    
+      //obs: nao está retornando UsersTeam
+      return registered+' usuários criados com sucesso'
+    } catch {
+      async (e) => {
+        console.error(e);
+        message = "Falha ao cadastrar ";
+        console.log(message);
+        await prisma.$disconnect();
+        process.exit(1);
+      };
+    }
   }
 
   return message;
@@ -90,7 +98,7 @@ const getAllUsers = async (companyId) => {
     },
     //include:{ company: true,}
   });
-  //await prisma.$disconnect();
+  await prisma.$disconnect();
 
   return users;
 };
@@ -150,9 +158,6 @@ const deleteUser = async (id) => {
 };
 const updateUser = async (user) => {
   let message = "";
-
-  if (user.password) await bcrypt.hash(user.password, 8);
-
   await prisma.$connect();
   await prisma.users
     .update({
@@ -160,7 +165,7 @@ const updateUser = async (user) => {
         id: user.id,
       },
       data: {
-        [Object.keys(user)[1]] : user[[Object.keys(user)[1]]],
+        [Object.keys(user)[1]]: user[[Object.keys(user)[1]]],
       },
     })
     .then(async () => {
@@ -178,15 +183,16 @@ const updateUser = async (user) => {
 };
 
 export default async function handler(request, response) {
-  console.log(request, "REQ");
+  console.log(request.body, "REQ");
   const method = request.method;
 
   if (method == "POST") {
-    const message = await createUser(request.body);
+    const message = await createUser(request.body.data);
+    console.log(message, "****");
     response.status(200).json(message);
   } else if (method == "GET") {
-    if (request.body.companyId) {
-      const users = await getAllUsers(request.body.companyId);
+    if (request.query.companyId) {
+      const users = await getAllUsers(request.query.companyId);
       response.status(200).json(users);
     } else {
       const user = await getUser(request.query.id);

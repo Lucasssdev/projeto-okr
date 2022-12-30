@@ -6,19 +6,21 @@ export const Div = styled.div`
   //justify-content: space-between;
   gap: 15px;
   align-items: flex-start;
-  width: 100%;
+  width: auto;
   height: auto;
-  padding: 15px 15px;
+  padding: 10px 15px;
   border-radius: 5px;
   padding-left: 5px;
   color: ${settingsCss.colorDetails};
-  margin-top: 10px;
+  margin-top: 20px;
   div {
     display: flex;
     gap: 5px;
     svg {
+      width: auto;
       display: none;
     }
+
     &:hover {
       svg {
         display: flex;
@@ -29,6 +31,7 @@ export const Div = styled.div`
 `;
 export const Input = styled.input`
   width: 100%;
+  max-width: 800px;
   height: auto;
   border: hidden;
   font-weight: 400;

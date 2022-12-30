@@ -1,7 +1,7 @@
 import * as jose from "jose";
 
 export const isValid = async (cookie) => {
-
+  
   /**
    * Constante secret e a variavel utilizada para assinar o token jwt
    */
@@ -18,7 +18,7 @@ export const isValid = async (cookie) => {
    *
    */
   const { payload } = await jose.jwtVerify(jwt, secret);
-
+  
   //console.log("PAYLOAD", payload);
 
   return payload;

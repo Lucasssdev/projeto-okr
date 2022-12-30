@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 //import axios from "axios";
 const prisma = new PrismaClient();
-const bcrypt = require("bcrypt");
 
 const getCompany = async (id) => {
   // console.log(id)
@@ -12,16 +11,12 @@ const getCompany = async (id) => {
       id,
     },
   });
-
+  console.log(company)
   return company;
 };
 
 const updateCompany = async (company) => {
   let message = "";
-
-  if (company.data == "password")
-    company.data = await bcrypt.hash(company.data, 8);
-
   await prisma.$connect();
   await prisma.company
     .update({
@@ -29,7 +24,7 @@ const updateCompany = async (company) => {
         id: company.id,
       },
       data: {
-        ...company.data,
+        [Object.keys(company)[1]] : company[[Object.keys(company)[1]]],
       },
     })
     .then(async () => {
@@ -47,14 +42,14 @@ const updateCompany = async (company) => {
 };
 
 export default async function handler(request, response) {
-  console.log(request.body, "REQ");
+  console.log(request.body, "REQQQ");
   const method = request.method;
 
   if (method == "GET") {
-    const user = await getCompany(request.body.id);
+    const user = await getCompany(request.query.id);
     response.status(200).json(user);
   } else if (method == "PUT") {
-    const message = await updateCompany(request.body);
+    const message = await updateCompany(request.body.data);
     response.status(200).json(message);
   } else {
     response.status(404).json("Não encontrado");

@@ -6,7 +6,12 @@ import axios from "axios";
 import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
 import { getCookie } from "cookies-next";
-
+import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
+import {
+  
+  faArrowRight,
+  
+} from "@fortawesome/pro-thin-svg-icons";
 export default function ProfileUser() {
   // const router = useRouter();
   const [tabPass, setTabPass] = useState(false);
@@ -14,9 +19,13 @@ export default function ProfileUser() {
     name: "",
     cpf: "",
     tel: "",
-    emai: "",
-    password: "",
+    email: "",
+    password:'',
+    passwordCurrent: "",
+    newPassword1:'',
+    newPassword2:''
   });
+ 
   const appToken = getCookie("userLogged") ?? null;
 
   const Payload = async (token) => {
@@ -34,6 +43,7 @@ export default function ProfileUser() {
         if(response.status === 200){ 
             setUser(response.data)
             console.log(response.data)
+            
         }
     }).catch(error => {return error, console.log('nao foii')}); 
             
@@ -63,6 +73,29 @@ export default function ProfileUser() {
         //router.push("/login");
       });
   };
+
+  const handlePassword = async () => {
+    if(user.newPassword1 == user.newPassword2){
+      const newPass = { id: user.id, newPassword: user.newPassword1, currentPassword: user.passwordCurrent, bdPassword: user.password };
+      axios.put("../api/Users/password", {
+        data: newPass
+      })
+      .then(function (response) {
+        console.log("+++", response);
+        Payload(appToken);
+        setUser({
+          ...user,
+          passwordCurrent: "",
+          newPassword1:'',
+          newPassword2:''
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+        //router.push("/login");
+      });
+    }
+  }
 
   useEffect(() => {
     Payload(appToken);
@@ -133,19 +166,38 @@ export default function ProfileUser() {
             />
 
             <span>
-              Meu E-mail<text>{user.emai}</text>
+              Meu E-mail<text>{user.email}</text>
             </span>
           </S.Data>
         </S.Profile>
       ) : (
         <S.DivPass>
+          <p>Altere sua senha</p>
           <EditInput
-            Label={"Senha"}
-            Type={"text"}
+            Placeholder={'Digite aqui a senha que você usa para logar'}
+            Label={"Senha atual"}
+            Type={"password"}
             onChange={handleOnChange}
-            Value={user.password}
-            Id={"password"}
+            Value={user.passwordCurrent}
+            Id={"passwordCurrent"}
           />
+          <EditInput
+            Placeholder={'Digite aqui a sua nova senha'}
+            Label={"Nova senha"}
+            Type={"password"}
+            onChange={handleOnChange}
+            Value={user.newPassword1}
+            Id={"newPassword1"}
+          />
+          <EditInput
+            Placeholder={'Repita a nova senha'}
+            Label={"Confirme a nova senha"}
+            Type={"password"}
+            onChange={handleOnChange}
+            Value={user.newPassword2}
+            Id={"newPassword2"}
+          />
+          <ButtonSubmit Text={'Alterar'} onClick={handlePassword} Icon={faArrowRight}/>
         </S.DivPass>
       )}
     </S.Container>

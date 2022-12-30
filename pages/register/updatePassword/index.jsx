@@ -1,11 +1,11 @@
 
-import GuestLayout from '../../assets/Layout/GuestLayout';
-import * as S from '../../assets/Styles/UpdatePassword'
+import GuestLayout from '../../../assets/Layout/GuestLayout';
+import * as S from '../../../assets/Styles/UpdatePassword'
 import React, { useState } from 'react';
-import Input from '../../assets/Componets/Inputs/Input';
+import Input from '../../../assets/Componets/Inputs/Input';
 import {  faLock, faArrowRight} from '@fortawesome/pro-thin-svg-icons';
-import ButtonSubmit from '../../assets/Componets/Buttons/ButtonSubmit';
-import Header from '../../assets/Layout/GuestLayout/Componets/Header';
+import ButtonSubmit from '../../../assets/Componets/Buttons/ButtonSubmit';
+import Header from '../../../assets/Layout/GuestLayout/Componets/Header';
 
 
 

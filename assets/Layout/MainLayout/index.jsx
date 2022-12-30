@@ -17,10 +17,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
+import { deleteCookie } from "cookies-next";
+
+
+
 
 export default function MainLayout({ children }) {
   const router = useRouter();
   const [user, setUser] = useState({});
+  const [company, setCompany] = useState({});
   const appToken = getCookie("userLogged") ?? null;
 
   const payload = async (token) => {
@@ -30,7 +35,16 @@ export default function MainLayout({ children }) {
       name: payload?.user.name,
       email: payload?.user.email,
     });
+    setCompany({
+      id: payload?.user.company.id,
+      name: payload?.user.company.name,
+    })
   };
+
+  const logout = () => {
+    deleteCookie('userLogged')
+    router.push('/login')
+  }
   useEffect(() => {
     payload(appToken);
   }, []);
@@ -102,12 +116,13 @@ export default function MainLayout({ children }) {
     <S.Container>
       <S.Main>
         <S.Logo>
-          <Image width={250} src={logoPurple} alt="logo" />
+          <Image width={200} src={logoPurple} alt="logo" />
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
-            <ButtonMain Icon={faBuilding} Text={"Empresa"} onClick={""} />
+            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={() => {
+                router.push("/dashboard");
+              }} />
             <ButtonMain
               Icon={faBookBookmark}
               Text={"Setor"}
@@ -116,7 +131,16 @@ export default function MainLayout({ children }) {
               }}
             />
           </div>
-          <div>
+          <S.Footer>
+          <S.Profile
+              onClick={() => {
+                router.push("/profile/company");
+              }}
+            >
+              {" "}
+              <FontAwesomeIcon icon={faBuilding} size="xl" />
+              {company.name}
+            </S.Profile>
             <S.Profile
               onClick={() => {
                 router.push("/profile/user");
@@ -126,8 +150,8 @@ export default function MainLayout({ children }) {
               <FontAwesomeIcon icon={faPlusCircle} size="xl" />
               {user.name}
             </S.Profile>
-            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} />
-          </div>
+            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} onClick={logout} />
+          </S.Footer>
         </S.Options>
       </S.Main>
       <S.ContainerMain>

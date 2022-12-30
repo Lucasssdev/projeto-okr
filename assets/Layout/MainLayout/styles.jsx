@@ -7,23 +7,20 @@ export const Container = styled.div`
   background: ${settingsCss.colorSecond};
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 280px auto;
-  align-items: center;
-  overflow-y: auto;
+  grid-template-columns: 220px auto;
+  overflow-y: hidden;
 `;
 
 export const ContainerMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  display: grid;
+  grid-template-rows: auto auto;
+ //background-color: aqua;
   height: 100vh;
   article {
     display: flex;
     flex-direction: column;
     align-items: center !important;
     width: 100%;
-    padding-top: 30px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -84,10 +81,11 @@ export const Options = styled.div`
   }
 `;
 export const Header = styled.div`
-  width: calc(100vw - 280px);
+  width: 100%;
   height: 85px !important;
   display: flex;
   justify-content: space-between;
+
   align-items: center;
   background: ${settingsCss.colorPrimary};
   padding: 40px 30px;
@@ -129,6 +127,11 @@ export const Logo = styled.image`
     border: hidden;
     background: transparent;
   }
+`;
+export const Footer = styled.div`
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
 `;
 export const Profile = styled.button`
   font-weight: 400;
