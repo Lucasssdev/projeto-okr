@@ -120,7 +120,9 @@ export default function MainLayout({ children }) {
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
+            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={() => {
+                router.push("/dashboard");
+              }} />
             <ButtonMain
               Icon={faBookBookmark}
               Text={"Setor"}

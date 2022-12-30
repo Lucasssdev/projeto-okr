@@ -42,7 +42,7 @@ export async function middleware(request) {
     }else{
       // console.log('Redireciona para a dashboard', request.url)
       // request.nextUrl.pathname ='/dashboard';
-      return NextResponse.redirect(new URL('/', request.url))
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
   }else{
     deleteCookie('userLogged')

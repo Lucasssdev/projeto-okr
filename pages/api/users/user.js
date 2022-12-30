@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 //import axios from "axios";
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+
 
 const createUser = async (users) => {
   let message = "";
@@ -44,20 +46,20 @@ const createUser = async (users) => {
   }
   if (users.team) {
    //console.log(users.companyId);
-    
+    let registered = 0
     try {
-      const usersTeam = [];
+     
       users.team.map(async (email) => {
         console.log(email);
         const newUser = {
           email: email,
           name: email.split("@")[0],
-          company: users.companyId.companyId,
-          password: await bcrypt.hash("okr", 4),
+          company: users.companyId,
+          password: crypto.randomBytes(4).toString("hex"),
           permission: "3",
         };
 
-        const user = await prisma.users.create({
+         await prisma.users.create({
           data: {
             email: newUser.email,
             name: newUser.name,
@@ -67,13 +69,12 @@ const createUser = async (users) => {
           },
         });
 
-        usersTeam.push(user)
-        console.log('ARray--',usersTeam);
+       registered++
         await prisma.$disconnect();
       });
-      console.log('array--',usersTeam);
+    
       //obs: nao está retornando UsersTeam
-      return usersTeam
+      return registered+' usuários criados com sucesso'
     } catch {
       async (e) => {
         console.error(e);

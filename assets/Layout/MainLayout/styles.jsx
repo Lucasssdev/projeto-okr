@@ -14,14 +14,13 @@ export const Container = styled.div`
 export const ContainerMain = styled.div`
   display: grid;
   grid-template-rows: auto auto;
- 
+ //background-color: aqua;
   height: 100vh;
   article {
     display: flex;
     flex-direction: column;
     align-items: center !important;
     width: 100%;
-    padding-top: 30px;
     overflow-y: auto;
     overflow-x: hidden;
   }

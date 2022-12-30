@@ -2,9 +2,9 @@ import styled from "styled-components";
 import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div`
-  width: 95%;
-  height: 200vh;
-  
+  width: 95%;  
+  height: 800vh;
+  margin-top: 30px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   background-color: ${settingsCss.colorPrimary};
@@ -48,6 +48,7 @@ export const Profile = styled.div`
   input{
     line-height: 0px;
   }
+  
 `;
 
 export const Data = styled.div`
@@ -55,7 +56,6 @@ export const Data = styled.div`
     width: 900px;
     
   }
-  
   span {
     
     display: flex;
@@ -80,6 +80,7 @@ export const MyTeam = styled.div`
   span{
     padding: 0px 25px;
   }
+  
   section{
     width: 100%;
     height: 100%;
@@ -90,8 +91,18 @@ export const MyTeam = styled.div`
 
 `;
 export const ListTeam = styled.ul`
+  padding: 0px;
+ 
+
 
 `
 export const Invite = styled.div`
- background-color: black;
+  border-left: solid 2px ${settingsCss.colorSecond} ;
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  span{
+    text-align: center;
+  }
 `

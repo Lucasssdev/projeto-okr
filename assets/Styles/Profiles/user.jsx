@@ -3,7 +3,8 @@ import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div`
   width: 90%;
-  height: 100vh;
+  height: 500vh;
+  margin-top: 30px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   background-color: ${settingsCss.colorPrimary};

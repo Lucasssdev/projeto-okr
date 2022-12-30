@@ -1,7 +1,7 @@
-import GuestLayout from "../../assets/Layout/GuestLayout";
-import * as S from "../../assets/Styles/CreateAccount";
+import GuestLayout from "../../../assets/Layout/GuestLayout";
+import * as S from "../../../assets/Styles/CreateAccount";
 import React, { useState } from "react";
-import Input from "../../assets/Componets/Inputs/Input";
+import Input from "../../../assets/Componets/Inputs/Input";
 import {
   faArrowRight,
   faUser,
@@ -10,8 +10,8 @@ import {
   faBuilding,
   faLock,
 } from "@fortawesome/pro-thin-svg-icons";
-import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
-import Header from "../../assets/Layout/GuestLayout/Componets/Header";
+import ButtonSubmit from "../../../assets/Componets/Buttons/ButtonSubmit";
+import Header from "../../../assets/Layout/GuestLayout/Componets/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
 

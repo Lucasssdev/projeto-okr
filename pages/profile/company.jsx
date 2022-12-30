@@ -2,11 +2,14 @@ import MainLayout from "../../assets/Layout/MainLayout";
 import * as S from "../../assets/Styles/Profiles/company";
 import EditInput from "../../assets/Componets/Inputs/EditInput";
 import React, { useEffect, useState } from "react";
+import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
+import ButtonSubmit from '../../assets/Componets/Buttons/ButtonSubmit'
 import axios from "axios";
 import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
 import { getCookie } from "cookies-next";
 import UserItem from "../../assets/Componets/UserItem";
+import DynamicInput from "../../assets/Componets/Inputs/DynamicInput";
 
 export default function ProfileUser() {
   // const router = useRouter();
@@ -19,6 +22,11 @@ export default function ProfileUser() {
     tel: "",
     instagram: "",
     address: "",
+  });
+
+  const [emails, setEmails] = useState({
+    firstEmail: "",
+    secondEmail: "",
   });
 
   const appToken = getCookie("userLogged") ?? null;
@@ -44,14 +52,15 @@ export default function ProfileUser() {
         return error, console.log("nao foii");
       });
   };
-  const getTeam = (id) => {
+  const getTeam = async (id) => {
     console.log(id, "ID");
-    axios
+    await axios
       .get("../api/Users/user?companyId=" + id)
       .then(function (response) {
         if (response.status === 200) {
           console.log(response.data);
           setTeam(response.data);
+          
         }
       })
       .catch((error) => {
@@ -82,12 +91,50 @@ export default function ProfileUser() {
         //router.push("/login");
       });
   };
+  const handleInviteTeam = async () => {
+   const companyId = company.id
+    for (let data in emails) {
+      console.log(data, "DATAA");
+      if (emails[data] == "") {
+        delete emails[data];
+      }
+    }
 
+    const team = Object.values(emails);
+    setEmails({
+      firstEmail: "",
+      secondEmail: "",
+    })
+
+    console.log(team, "TEAM", companyId)
+    
+    if (team.length > 0) {
+      await axios
+        .post("../api/Users/user", {
+          data: {
+            team,
+            companyId,
+          },
+        })
+        .then(async function (response) {
+          console.log(response);
+          if (response.status == 200) {
+            console.log(response);
+            await getTeam(companyId)
+           
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        
+    }
+  };
   useEffect(() => {
     Payload(appToken);
   }, []);
   useEffect(() => {
-    console.log(team);
+    setEmails({firstEmail:'', secondEmail: ''})
   }, [team]);
   return (
     <S.Container>
@@ -150,7 +197,7 @@ export default function ProfileUser() {
               Type={"text"}
               Value={company.cnpj}
               onChange={handleOnChange}
-              Id={"cpf"}
+              Id={"cnpj"}
             />
             <EditInput
               onBlur={() => submitData("instagram")}
@@ -183,21 +230,31 @@ export default function ProfileUser() {
         </S.Profile>
       ) : tab == 2 ? (
         <S.MyTeam>
-          <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum eligendi provident alias facere dolor. Recusandae fugit, similique explicabo harum vel sapiente eius qui architecto, reiciendis, alias impedit nostrum? In, distinctio?</span>
-         <section>
-          <S.ListTeam>
-            {
-              team.map((user, key) => (
-                <UserItem user={user} key={key}/>
-              ))
-            }
-          </S.ListTeam>
-          <S.Invite>
-            oioioio
-          </S.Invite>
+          <span>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum
+            eligendi provident alias facere dolor. Recusandae fugit, similique
+            explicabo harum vel sapiente eius qui architecto, reiciendis, alias
+            impedit nostrum? In, distinctio?
+          </span>
+          <section>
+            <S.ListTeam>
+              {team.map((user, key) => (
+                <UserItem user={user} key={key} />
+              ))}
+            </S.ListTeam>
+            <S.Invite>
+              <span>
+                ENVIAR <strong>CONVITE</strong>
+              </span>
+              <DynamicInput emails={emails} setEmails={setEmails} />
+              <ButtonSubmit
+          Text="CONCLUIR CADASTRO"
+          Icon={faArrowRight}
+          onClick={handleInviteTeam}
+        />
+            </S.Invite>
           </section>
         </S.MyTeam>
-       
       ) : null}
     </S.Container>
   );

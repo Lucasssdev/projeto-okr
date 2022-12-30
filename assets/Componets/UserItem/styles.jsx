@@ -4,10 +4,10 @@ import settingsCss from "../../../Util/SettingsCss";
 export const Li = styled.li`
   display: grid;
   grid-template-columns: 8% 33% auto;
-  width: 100%;
+  width: 97%;
   border-bottom: solid ${settingsCss.colorSecond};
   align-items: center;
-  padding: 5px 0px;
+  padding: 5px 0px 5px 20px;
   gap: 5px;
 `;
 export const ImageDiv = styled.div`
@@ -81,7 +81,8 @@ export const Sector = styled.span`
 export const Score = styled.div`
   display: flex;
   gap: 10px;
-  width: 100%;
+  width: auto;
+  padding: 0px;
 `;
 export const Box = styled.div`
   display: flex;
