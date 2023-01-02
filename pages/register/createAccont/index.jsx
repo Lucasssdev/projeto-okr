@@ -20,13 +20,13 @@ export default function CreateAccount() {
   const [nextScreen, setNextScreen] = useState(false);
 
   const [adm, setAdm] = useState({
-    company: "Mar Azul",
-    email: "chiquin@gmail.com",
-    name: "chiquin turbo",
-    password: "123",
-    password2: "123",
+    company: "",
+    email: "",
+    name: "",
+    password: "",
+    password2: "",
     permission: "1",
-    tel: "35998777715",
+    tel: "",
   });
 
   const handleOnChange = (e) => {

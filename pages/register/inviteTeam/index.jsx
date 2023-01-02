@@ -22,6 +22,7 @@ export default function InviteTeam() {
 
   const handleInviteTeam = async () => {
     await getadm(companyId);
+    
     for (let data in emails) {
       console.log(data, "DATAA");
       if (emails[data] == "") {
@@ -73,7 +74,7 @@ export default function InviteTeam() {
   };
   const getadm = async (id) => {
     console.log(id, "ID");
-    axios
+    await axios
       .get("../../api/Users/user?companyId=" + id)
       .then(function (response) {
         if (response.status === 200) {
