@@ -18,6 +18,8 @@ import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
+import DialogCreateOkr from "../../Componets/Modal";
+import axios from "axios";
 
 
 
@@ -41,7 +43,8 @@ export default function MainLayout({ children }) {
     })
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await axios.post('api/Auth/authLogout')
     deleteCookie('userLogged')
     router.push('/login')
   }
@@ -162,12 +165,7 @@ export default function MainLayout({ children }) {
               Icon={faMagnifyingGlass}
             />
           </S.Search>
-          <S.Button>
-            <span>
-              Adicionar <strong>OKR</strong>
-            </span>
-            <FontAwesomeIcon icon={faPlusCircle} size="xl" />
-          </S.Button>
+          <DialogCreateOkr/>
         </S.Header>
         {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
         <article>{children}</article>

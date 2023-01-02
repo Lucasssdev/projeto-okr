@@ -18,7 +18,9 @@ export async function middleware(request) {
   ];
 
   // console.log('pathname',pathname.toString());
-
+  if(request.nextUrl.pathname  == '/expiredToken' && request.cookies.has("userLogged")){
+    return NextResponse.next();
+  }
   if (!request.cookies.has("userLogged")) {
     if (authPages.includes(pathname)) {
       request.nextUrl.pathname = pathname;
@@ -44,9 +46,7 @@ export async function middleware(request) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } else {
-    console.log("++", request.cookies);
-
-    //NextResponse.clearCookie("nomeDoCookie");
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/expiredToken", request.url));
   }
+ 
 }
