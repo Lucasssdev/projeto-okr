@@ -8,7 +8,7 @@ import { faEnvelope } from "@fortawesome/pro-thin-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function DYnamicInput({ emails, setEmails }) {
+export default function DynamicInput({ emails, setEmails }) {
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;

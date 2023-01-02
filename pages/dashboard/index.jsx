@@ -1,77 +1,133 @@
 import MainLayout from "../../assets/Layout/MainLayout";
 import * as S from "../../assets/Styles/Dashboard";
-import React, { useState } from "react";
+import React from "react";
 import Description from "../../assets/Componets/Description";
 
 export default function DashBoard() {
-  /*const [keys, setKeys] = useState([])
-  const [okrs, setOkrs] = useState([
-    {
-      name: "Ler mais livros",
-      keys: [
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-        "ler 2 pagisnas por dia",
-        "aumenta 2x paginas por semana",
-      ],
-    },
-    {
-      name: "aumentar faturaemnto",
-      keys: [
-        "ler 4 pagisnas por dia",
-        "aumenta 4x paginas por semana",
-        "ler 4 pagisnas por dia",
-        "aumenta 4x paginas por semana",
-       
-      ],
-    },
-    {
-      name: "Subir nivel",
-      keys: [
-        "ler 8 pagisnas por dia",
-        "aumenta 8x paginas por semana",
-        "ler 8 pagisnas por dia",
-        "aumenta 8x paginas por semana",
-        "ler 8 pagisnas por dia",
-        "aumenta 8x paginas por semana",
-        "ler 8 pagisnas por dia",
-        
-      ],
-    }
-  ]); 
-  for(var i = 0 ; i < okrs.length ; i++){
-    
-    okrs[i].keys.map((key) => {
-      console.log(key)
-      let arr = [...keys]
-      arr.push(key)
-      setKeys(arr)})
-  }*/
-
   return (
     <S.Div>
       <S.Colum1>
         <S.Activities>
-          <span>
+          <h3>
             minhas <strong>atividades</strong>
-          </span>
+          </h3>
           {
-           
-  //console.log(keys)
-
+            //console.log(keys)
           }
-        <Description text={'olaaa'}/>
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
+          <Description text={"Descriçao da atividade"} />
         </S.Activities>
       </S.Colum1>
-      <S.Colum2>ppo</S.Colum2>
+      <S.Colum2>
+        <S.Scores>
+          <S.Box>
+            45
+            <span>
+              <strong>tasks</strong> realizadas
+            </span>
+            <small>
+              2022 • q3 • <strong>+10</strong>
+            </small>
+          </S.Box>
+          <S.Box>
+            16
+            <span>
+              <strong>tasks</strong> realizadas
+            </span>
+            <small>
+              2022 • q3 • <strong color='#F3426C'>+10</strong>
+            </small>
+          </S.Box>
+          <S.Box>
+            26
+            <span>
+              <strong>tasks</strong> realizadas
+            </span>
+            <small>
+              2022 • q3 • <strong>+10</strong>
+            </small>
+          </S.Box>
+        </S.Scores>
+        <S.Scores>
+          <S.Box>
+            888
+            <span>
+              <strong>nota</strong> média
+            </span>
+            <small>
+              2022 • q3 • <strong>+10</strong>
+            </small>
+          </S.Box>
+          <S.Box>
+            888
+            <span>
+              <strong>nota</strong> média
+            </span>
+            <small>
+              2022 • q3 • <strong>+10</strong>
+            </small>
+          </S.Box>
+          <S.Box>
+            888
+            <span>
+              <strong>nota</strong> média
+            </span>
+            <small>
+              2022 • q3 • <strong>+10</strong>
+            </small>
+          </S.Box>
+        </S.Scores>
+        <S.Okrs>
+          <h3>
+            minhas <strong>okrs</strong>
+          </h3>
+          <S.ListOkrs>
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+          </S.ListOkrs>
+        </S.Okrs>
+        <S.History>
+          <h3>
+            meu <strong>histórico</strong>
+          </h3>
+          <S.ListOkrs>
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />
+            <Description text={"Descrição da okr"} />{" "}
+          </S.ListOkrs>
+        </S.History>
+      </S.Colum2>
     </S.Div>
   );
 }
