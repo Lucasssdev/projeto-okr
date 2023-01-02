@@ -3,26 +3,26 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createSector = async (sector) => {
-  let message = ''
+  console.log(sector)
     await prisma.$connect();
   try {
     const newSector = await prisma.sectors.create({
       data: {
         name: sector.name,
-        company_id: sector.company_id
+        company_id: sector.companyId
       },
     });
-    message = 'Sector criado com sucesso!'
     console.log(newSector)
     await prisma.$disconnect();
+    return newSector
   } catch {
     async (e) => {
       console.error(e);
       await prisma.$disconnect();
-      message = 'Falha ao criar setor'
+      return 'Falha ao criar setor'
     };
   }
-  return message;
+
 
 };
 
@@ -31,7 +31,7 @@ const getAllSector = async (companyId) => {
   
   const sectors = await prisma.sectors.findMany({
     where: {
-      companyId: companyId,
+      company_id: companyId,
     },
     //include:{ company: true,}
   });
@@ -98,15 +98,15 @@ const updateSector = async (sector) => {
 };
 
 export default async function handler(request, response) {
-  console.log(request.query, "REQ");
+  console.log(request.body, "REQUEST");
   const method = request.method;
 
   if (method == "POST") {
-    const message = await createSector(request.body);
+    const message = await createSector(request.body.data.sector);
     response.status(200).json(message);
   } else if (method == "GET") {
-    if (request.body.company_id) {
-      const sectors = await getAllSector(request.body.companyId);
+    if (request.query.companyId) {
+      const sectors = await getAllSector(request.query.companyId);
       response.status(200).json(sectors);
     } else {
       const sector = await getSector(request.query?.id || null);
