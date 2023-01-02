@@ -127,7 +127,7 @@ export default function MainLayout({ children }) {
               Icon={faBookBookmark}
               Text={"Setor"}
               onClick={() => {
-                router.push("/a");
+                router.push("/sectors");
               }}
             />
           </div>
