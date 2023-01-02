@@ -8,7 +8,7 @@ import {
 import React from "react";
 
 const UserItem = (data) => {
-  console.log(data);
+ // console.log(data.user);
   const permission = data.user.permission;
   const iconPermission = (permission) => {
     return permission == "1"
@@ -30,7 +30,7 @@ const UserItem = (data) => {
     surname:  nameArray.length == 1 ? '' : nameArray[nameArray.length -1], 
 
   }
-  console.log(myName)
+ // console.log(myName)
   return (
     <S.Li>
       <S.ImageDiv>

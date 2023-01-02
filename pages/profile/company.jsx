@@ -33,9 +33,9 @@ export default function ProfileUser() {
 
   const Payload = async (token) => {
     const payload = await isValid(token);
-    console.log(payload.user, "++");
-    getCompany(payload.user.company.id);
-    getTeam(payload.user.company.id);
+    console.log(payload?.user, "++");
+    getCompany(payload?.user.company.id);
+    getTeam(payload?.user.company.id);
   };
 
   const getCompany = (id) => {
@@ -101,11 +101,7 @@ export default function ProfileUser() {
     }
 
     const team = Object.values(emails);
-    setEmails({
-      firstEmail: "",
-      secondEmail: "",
-    })
-
+  
     console.log(team, "TEAM", companyId)
     
     if (team.length > 0) {
@@ -121,6 +117,8 @@ export default function ProfileUser() {
           if (response.status == 200) {
             console.log(response);
             await getTeam(companyId)
+            let newField = {}
+            setEmails(newField)
            
           }
         })
@@ -134,8 +132,8 @@ export default function ProfileUser() {
     Payload(appToken);
   }, []);
   useEffect(() => {
-    setEmails({firstEmail:'', secondEmail: ''})
-  }, [team]);
+    console.log(emails)
+  }, [emails]);
   return (
     <S.Container>
       <S.Tab>
