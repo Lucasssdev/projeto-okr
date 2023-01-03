@@ -12,17 +12,12 @@ import {
   faSignIn,
   faMagnifyingGlass,
   faPlusCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from "@fortawesome/pro-regular-svg-icons";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
 import DialogCreateOkr from "../../Componets/Modal";
-import axios from "axios";
-
-
-
 
 export default function MainLayout({ children }) {
   const router = useRouter();
@@ -40,14 +35,14 @@ export default function MainLayout({ children }) {
     setCompany({
       id: payload?.user.company.id,
       name: payload?.user.company.name,
-    })
+    });
   };
 
-  const logout = async () => {
-    await axios.post('api/Auth/authLogout')
-    deleteCookie('userLogged')
-    router.push('/login')
-  }
+  const logout = () => {
+   
+    deleteCookie("userLogged");
+    router.push("/login");
+  };
   useEffect(() => {
     payload(appToken);
   }, []);
@@ -123,10 +118,16 @@ export default function MainLayout({ children }) {
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={() => {
-                router.push("/dashboard");
-              }} />
             <ButtonMain
+              Route={'/dashboard'}
+              Icon={faHouse}
+              Text={"Inicio"}
+              onClick={() => {
+                router.push("/dashboard");
+              }}
+            />
+            <ButtonMain
+              Route={"/sectors"}
               Icon={faBookBookmark}
               Text={"Setor"}
               onClick={() => {
@@ -135,25 +136,28 @@ export default function MainLayout({ children }) {
             />
           </div>
           <S.Footer>
-          <S.Profile
-              onClick={() => {
-                router.push("/profile/company");
-              }}
-            >
-              {" "}
-              <FontAwesomeIcon icon={faBuilding} size="xl" />
-              {company.name}
-            </S.Profile>
-            <S.Profile
+            <ButtonMain
+              Route={"/profile/user"}
+              Icon={faPlusCircle}
+              Text={user.name}
               onClick={() => {
                 router.push("/profile/user");
               }}
-            >
-              {" "}
-              <FontAwesomeIcon icon={faPlusCircle} size="xl" />
-              {user.name}
-            </S.Profile>
-            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} onClick={logout} />
+            />
+            <ButtonMain
+              Route={"/profile/company"}
+              Icon={faBuilding}
+              Text={company.name}
+              onClick={() => {
+                router.push("/profile/company");
+              }}
+            />
+            <ButtonMain
+              Route={''}
+              Icon={faSignIn}
+              Text={"Sair do Gestor OKR"}
+              onClick={logout}
+            />
           </S.Footer>
         </S.Options>
       </S.Main>
@@ -165,7 +169,7 @@ export default function MainLayout({ children }) {
               Icon={faMagnifyingGlass}
             />
           </S.Search>
-          <DialogCreateOkr/>
+          <DialogCreateOkr />
         </S.Header>
         {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
         <article>{children}</article>

@@ -20,11 +20,11 @@ model users {
   permission String?
   officie    String?
 
-  // okrs okr[]
+  //okrs okrs[]
 
-  // //Cada usuário possui varias okrs
-  // okrs_IDs String[] @db.ObjectId
-  // okr okr[] @relation(fields: [okrs_IDs], references: [id])
+  //Cada usuário possui varias okrs
+  okrs_IDs String[] @db.ObjectId
+  okr      okrs[]   @relation(fields: [okrs_IDs], references: [id])
 
   okrsmanagers okrs[] @relation("Manager")
   okrsteams    okrs[] @relation("Team")
@@ -34,8 +34,11 @@ model users {
   company   company @relation(fields: [companyId], references: [id])
 
   //Cada usuário pertence a uma empresa
-  //sectors_id String
-  //sector sectors @relation(fields: [sectors_id], references: [id])
+  sectors_id String?  @db.ObjectId
+  sector     sectors? @relation(fields: [sectors_id], references: [id])
+
+  createdIn DateTime? @default(now())
+  updatedIn DateTime? @updatedAt
 }
 
 model company {
@@ -53,32 +56,9 @@ model company {
 
   //A empresa irá possuir várias sector
   sector sectors[]
-}
 
-model okrs {
-  id   String  @id @default(auto()) @map("_id") @db.ObjectId
-  name String?
-
-  manager_id String
-  manager    users  @relation("Manager", fields: [manager_id], references: [id])
-
-  team_id String
-  team    users  @relation("Team", fields: [team_id], references: [id])
-
-  //Cada okr pertence a uma sector
-  sector_id String
-  sector    sectors @relation(fields: [sector_id], references: [id])
-
-  //Cada okr pertence a 2 usuários [ 1 manager e 1 usuário ]
-  // users_IDs String[] @db.ObjectId
-  // users users[] @relation(fields: [users_IDs], references: [id])
-
-  //Cada okr irá pertencer a uma empresa
-  company_id String
-  company    company @relation(fields: [company_id], references: [id])
-
-  //Cada okr possuí uma ou mais ações
-  keys key[]
+  createdIn DateTime? @default(now())
+  updatedIn DateTime? @updatedAt
 }
 
 model sectors {
@@ -86,21 +66,56 @@ model sectors {
   name String?
 
   //Cada sector irá possuir vários usuários
-  //users users[]
+  users users[]
 
   //Cada sector irá possuir várias okr's
   okrs okrs[]
 
   //Cada sector irá pertencer a uma empresa
-  company_id String
+  company_id String  @db.ObjectId
   company    company @relation(fields: [company_id], references: [id])
+
+  createdIn DateTime? @default(now())
+  updatedIn DateTime? @updatedAt
+}
+
+model okrs {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+
+  manager_id String @db.ObjectId
+  manager    users  @relation("Manager", fields: [manager_id], references: [id])
+
+  team_id String[] @db.ObjectId
+  team    users    @relation("Team", fields: [team_id], references: [id])
+
+  //Cada okr pertence a uma sector
+  sector_id String  @db.ObjectId
+  sector    sectors @relation(fields: [sector_id], references: [id])
+
+  //Cada okr pertence a N usuários [ 1 manager e N usuário ]
+  users_IDs String[] @db.ObjectId
+  users     users[]  @relation(fields: [users_IDs], references: [id])
+
+  //Cada okr irá pertencer a uma empresa
+  company_id String  @db.ObjectId
+  company    company @relation(fields: [company_id], references: [id])
+
+  //Cada okr possuí uma ou mais ações
+  keys key[]
+
+  createdIn DateTime? @default(now())
+  updatedIn DateTime? @updatedAt
 }
 
 model key {
-  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
-  title                String
-  date_prazo_conclusao DateTime
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
 
-  okr_id String
+  okr_id String @db.ObjectId
   okr    okrs   @relation(fields: [okr_id], references: [id])
+
+  dateToCompletion DateTime
+  createdIn        DateTime? @default(now())
+  updatedIn        DateTime? @updatedAt
 }

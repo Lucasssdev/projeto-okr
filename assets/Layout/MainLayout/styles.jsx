@@ -9,6 +9,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 220px auto;
   overflow-y: hidden;
+  
 `;
 
 export const ContainerMain = styled.div`
@@ -48,17 +49,8 @@ export const Options = styled.div`
   font-weight: 400;
   font-size: 14px;
   button {
-    div {
-      display: none;
-    }
-    padding: 40px 20px;
-    margin-bottom: 10px;
-    background: transparent;
-    border: hidden;
-    text-align: start;
-    &:hover {
-      cursor: pointer;
-    }
+  
+    
   }
   div {
     display: flex;
@@ -131,14 +123,16 @@ export const Logo = styled.image`
 export const Footer = styled.div`
  display: flex;
  flex-direction: column;
- gap: 20px;
+
 `;
 export const Profile = styled.button`
   font-weight: 400;
   font-size: 14px;
+  height: 25px;
   display: flex;
   padding: 0px 20px !important;
   gap: 20px;
+  
   &:hover {
     cursor: pointer;
 

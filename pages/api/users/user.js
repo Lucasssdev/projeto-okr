@@ -96,10 +96,10 @@ const getAllUsers = async (companyId) => {
     where: {
       companyId: companyId,
     },
-    //include:{ company: true,}
+    include:{ company: true,}
   });
   await prisma.$disconnect();
-
+  console.log(users,'USERS')
   return users;
 };
 const getUser = async (id) => {
