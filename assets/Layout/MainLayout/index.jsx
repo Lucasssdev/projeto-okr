@@ -11,13 +11,14 @@ import {
   faBookBookmark,
   faSignIn,
   faMagnifyingGlass,
-  faPlusCircle,
 } from "@fortawesome/pro-regular-svg-icons";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
 import DialogCreateOkr from "../../Componets/Modal";
+import userProfile from "../../../public/userProfile.svg";
+import axios from "axios";
 
 export default function MainLayout({ children }) {
   const router = useRouter();
@@ -27,22 +28,34 @@ export default function MainLayout({ children }) {
 
   const payload = async (token) => {
     const payload = await isValid(token);
-    setUser({
-      id: payload?.user.id,
-      name: payload?.user.name,
-      email: payload?.user.email,
-    });
+    getUser(payload?.user.id);
     setCompany({
       id: payload?.user.company.id,
       name: payload?.user.company.name,
     });
   };
 
+  const getUser = async (id) => {
+    console.log(id, "ID");
+    await axios
+      .get("../api/Users/user?id=" + id)
+      .then(function (response) {
+        if (response.status === 200) {
+          setUser(response.data);
+          console.log(response.data);
+          //setBase64code(response.data.imageProfile);
+        }
+      })
+      .catch((error) => {
+        return error, console.log("nao foii");
+      });
+  };
   const logout = () => {
-   
     deleteCookie("userLogged");
     router.push("/login");
   };
+
+  const imageProfile = user.imageProfile ?? userProfile;
   useEffect(() => {
     payload(appToken);
   }, []);
@@ -119,7 +132,7 @@ export default function MainLayout({ children }) {
         <S.Options>
           <div>
             <ButtonMain
-              Route={'/dashboard'}
+              Route={"/dashboard"}
               Icon={faHouse}
               Text={"Inicio"}
               onClick={() => {
@@ -138,11 +151,17 @@ export default function MainLayout({ children }) {
           <S.Footer>
             <ButtonMain
               Route={"/profile/user"}
-              Icon={faPlusCircle}
+              image={imageProfile}
               Text={user.name}
               onClick={() => {
                 router.push("/profile/user");
               }}
+            />
+            <ButtonMain
+              Route={""}
+              Icon={faSignIn}
+              Text={"Sair do Gestor OKR"}
+              onClick={logout}
             />
             <ButtonMain
               Route={"/profile/company"}
@@ -151,12 +170,6 @@ export default function MainLayout({ children }) {
               onClick={() => {
                 router.push("/profile/company");
               }}
-            />
-            <ButtonMain
-              Route={''}
-              Icon={faSignIn}
-              Text={"Sair do Gestor OKR"}
-              onClick={logout}
             />
           </S.Footer>
         </S.Options>
@@ -169,7 +182,7 @@ export default function MainLayout({ children }) {
               Icon={faMagnifyingGlass}
             />
           </S.Search>
-          <DialogCreateOkr />
+          <DialogCreateOkr user={user.id} company={company.id} />
         </S.Header>
         {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
         <article>{children}</article>

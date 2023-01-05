@@ -49,7 +49,7 @@ export const ImageDiv = styled.div`
   gap: 25px;
   display: flex;
   padding-top: 60px;
-  a {
+  label {
     text-transform: uppercase;
     font-weight: 400;
     font-size: 16px;
@@ -57,6 +57,9 @@ export const ImageDiv = styled.div`
       color: ${settingsCss.colorDetails};
       cursor: pointer;
     }
+  }
+  input{
+    display: none;
   }
 `;
 export const Image = styled.div`
@@ -67,6 +70,12 @@ export const Image = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  img{
+    border-radius: 50%;
+    
+    object-fit: cover;
+  }
+ 
 `;
 export const Data = styled.div`
   input {

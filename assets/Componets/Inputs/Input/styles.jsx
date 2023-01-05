@@ -13,6 +13,7 @@ export const Div = styled.div`
     color: ${settingsCss.colorDetails};
     margin-top: 10px;
     
+    
 `
 export const Input = styled.input`
     width: 100%;
@@ -20,13 +21,20 @@ export const Input = styled.input`
     border: hidden;
     padding-left: 15px;
     background: transparent;
+   
     :focus{
         outline: none;
     }
     ::placeholder{
-        color: #7559F2;
+        color:${settingsCss.colorDetails};;
+    }
+    ::-webkit-calendar-picker-indicator{
+
+        color: ${settingsCss.colorDetails};
+        font-size: 20px;
+       
     }
 `
 export const Icon = styled.div`
-
+  
 `

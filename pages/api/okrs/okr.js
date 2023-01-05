@@ -3,35 +3,29 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createOkr = async (okr) => {
-  console.log(okr)
-    await prisma.$connect();
+  console.log(okr);
+  await prisma.$connect();
   try {
-    const newokr = await prisma.okrs.create({
-      data: {
-        name: okr.name,
-        company_id: okr.company_id,
-        team_id: okr.team_id ,
-        manager_id: okr.manager_id,
-        sector_id: okr.sector_id
-      },
+    console.log("555newokr");
+
+    const newOkr = await prisma.okrs.create({
+      data: okr,
     });
-    console.log(newokr)
-    await prisma.$disconnect();
-    return newokr
-  } catch {
-    async (e) => {
+    console.log(newOkr);
+    //await prisma.$disconnect();
+    return newOkr;
+  } catch (e) {
+   
       console.error(e);
       await prisma.$disconnect();
-      return 'Falha ao criar Okr'
-    };
+      return "Falha ao criar Okr";
+    
   }
-
-
 };
 
 const getAllOkrs = async (companyId) => {
   await prisma.$connect();
-  
+
   const sectors = await prisma.sectors.findMany({
     where: {
       company_id: companyId,
@@ -39,7 +33,7 @@ const getAllOkrs = async (companyId) => {
     //include:{ company: true,}
   });
   await prisma.$disconnect();
-  console.log(sectors)
+  console.log(sectors);
   return sectors;
 };
 const getOkr = async (id) => {
@@ -55,48 +49,49 @@ const getOkr = async (id) => {
   return sector;
 };
 const deleteOkr = async (id) => {
-    let message = ""
-    await prisma.$connect();    
-    await prisma.sectors.delete({      
-         where: {         
-            id      
-        }     
-    })     
-    .then(async () => {          
-        await prisma.$disconnect() 
-        message =  'Setor deletado' 
-
-    }).catch(async (e) => {         
-        console.error(e)         
-        await prisma.$disconnect()         
-        message =  'Falha ao deletar' 
-    })          
-    return message;
-  }
+  let message = "";
+  await prisma.$connect();
+  await prisma.sectors
+    .delete({
+      where: {
+        id,
+      },
+    })
+    .then(async () => {
+      await prisma.$disconnect();
+      message = "Setor deletado";
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      message = "Falha ao deletar";
+    });
+  return message;
+};
 
 const updateOkr = async (sector) => {
   let message = "";
-  try{
-  await prisma.$connect();
-  const newSector = await prisma.sectors
-    .update({
+  try {
+    await prisma.$connect();
+    const newSector = await prisma.sectors.update({
       where: {
         id: sector.id,
       },
       data: {
         name: sector.name,
       },
-    })
-    console.log(newSector)
+    });
+    console.log(newSector);
     await prisma.$disconnect();
     message = "Alterado com sucesso!";
-    
-}catch{async (e) => {
+  } catch {
+    async (e) => {
       console.error(e);
       await prisma.$disconnect();
       message = "Falha ao alterar";
       process.exit(1);
-}}
+    };
+  }
   return message;
 };
 
@@ -105,8 +100,8 @@ export default async function handler(request, response) {
   const method = request.method;
 
   if (method == "POST") {
-    const message = await createOkr(request.body);
-    response.status(200).json(message);
+    const message = await createOkr(request.body.data);
+    return response.status(200).json(message);
   } else if (method == "GET") {
     if (request.query.companyId) {
       const sectors = await getAllOkrs(request.query.companyId);

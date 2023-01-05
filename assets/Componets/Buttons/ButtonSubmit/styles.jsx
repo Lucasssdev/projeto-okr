@@ -17,6 +17,7 @@ export const Div = styled.button`
     box-shadow: 0px 0px 25px rgba(117, 89, 242, 0.25);
     border-radius: 4px; 
     margin-top: 20px;
+    
     *{
             transition-duration: 0.7s;
         }

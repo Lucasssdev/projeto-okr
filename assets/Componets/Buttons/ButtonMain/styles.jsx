@@ -9,20 +9,25 @@ export const Div = styled.button`
   width: 220px;
   height: auto;
   padding-left: 0px;
-  color: ${props => props.select ? settingsCss.colorDetails : settingsCss.coloTextMain};
+  color: ${(props) =>
+    props.select ? settingsCss.colorDetails : settingsCss.coloTextMain};
   padding: 10px 20px;
   background: transparent;
   border: hidden;
   text-align: start;
 
   div {
-    display:  ${props => props.select ? 'flex' : 'none'};
+    display: ${(props) => (props.select ? "flex" : "none")};
   }
   &:hover {
     cursor: pointer;
     div {
       display: flex;
     }
+  }
+  img {
+    border-radius: 50%;
+    object-fit: cover;
   }
 `;
 export const Text = styled.h2`

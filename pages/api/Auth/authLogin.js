@@ -11,7 +11,8 @@ async function makeFirstLogin(id) {
     where: {
       id: id 
     },
-    include: { company: true },
+   
+    include: { company: true},
   });
   console.log(user);
  
@@ -32,7 +33,13 @@ async function makeLogin(login) {
     where: {
       email: login.email 
     },
-    include: { company: true },
+    select: {
+      id: true,
+      name: true,
+      password: true,
+      company: true
+    },
+ 
   });
   console.log(user);
   const checkPass = await CheckPass(login.password, user.password)

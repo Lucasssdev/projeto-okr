@@ -83,6 +83,7 @@ export const Header = styled.div`
   padding: 40px 30px;
 `;
 export const Search = styled.div``;
+
 export const Button = styled.button`
   * {
     transition-duration: 1s;
