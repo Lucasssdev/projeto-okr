@@ -21,7 +21,7 @@ export const Input = styled.input`
     border: hidden;
     padding-left: 15px;
     background: transparent;
-   
+ 
     :focus{
         outline: none;
     }
@@ -29,9 +29,14 @@ export const Input = styled.input`
         color:${settingsCss.colorDetails};;
     }
     ::-webkit-calendar-picker-indicator{
-
-        color: ${settingsCss.colorDetails};
+        margin-right: -15px;
+        color: red  !important;
         font-size: 20px;
+        background-color: #ff9306;
+        display: flex;
+        
+       // opacity: 0%;
+        
        
     }
 `

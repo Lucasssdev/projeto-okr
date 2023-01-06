@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { isValid } from "./src/jwt/isValidToken";
 
-export async function middleware(request) {
+
+export default async function middleware(request) {
   const cookie = request.cookies.get("userLogged")?.value ?? "";
   // console.log('COOKIE: ',cookie, '\n',typeof cookie);
   const { pathname } = request.nextUrl;

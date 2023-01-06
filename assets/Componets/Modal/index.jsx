@@ -7,6 +7,7 @@ import {
   faArrowRight,
   faTextWidth,
   faXmark,
+  faCalendar
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Input from "../Inputs/Input";
@@ -102,7 +103,7 @@ function DialogCreateOkr(IDs) {
               />
               <Input
                 Placeholder={"Prazo final de realização"}
-               
+                Icon={faCalendar}
                 Type={"date"}
                 Id={"deadline"}
                 Value={okr.deadline}

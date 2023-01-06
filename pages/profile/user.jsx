@@ -10,7 +10,9 @@ import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import Image from "next/image";
 import userProfile from '../../public/userProfile.svg'
-
+import cpfMask from "../../assets/Mask/cpfMask";
+import phoneMask from "../../assets/Mask/phoneMask";
+//import { useStore } from '../../assets/Layout/MainLayout'
 export default function ProfileUser() {
   // const router = useRouter();
   const [tabPass, setTabPass] = useState(false);
@@ -24,7 +26,8 @@ export default function ProfileUser() {
     newPassword1: "",
     newPassword2: "",
   });
-
+  //const {myUser ,get } = useStore()
+  //console.log(myUser,'MYUSER')
   const appToken = getCookie("userLogged") ?? null;
 
   const Payload = async (token) => {
@@ -52,11 +55,27 @@ export default function ProfileUser() {
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    setUser((date) => ({
-      ...date,
+    if(key === 'cpf'){
+      setUser((user) => ({
+          ...user,
+          
+          [key]: cpfMask(value),
+      }));
+    }else if(key === "tel"){
+      value.length < 16
+      ? setUser((user) => ({
+        ...user,
 
-      [key]: value,
-    }));
+        [key]: phoneMask(value),
+      }))
+      : null
+  }else{
+      setUser((user) => ({
+          ...user,
+          
+          [key]: value,
+      }));
+  }
   };
 
   const submitData = (prop) => {

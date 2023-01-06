@@ -3,13 +3,15 @@ import * as S from "../../assets/Styles/Profiles/company";
 import EditInput from "../../assets/Componets/Inputs/EditInput";
 import React, { useEffect, useState } from "react";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
-import ButtonSubmit from '../../assets/Componets/Buttons/ButtonSubmit'
+import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import axios from "axios";
 import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
 import { getCookie } from "cookies-next";
 import UserItem from "../../assets/Componets/UserItem";
 import DynamicInput from "../../assets/Componets/Inputs/DynamicInput";
+import cnpjMask from "../../assets/Mask/cnpjMask";
+import phoneMask from "../../assets/Mask/phoneMask";
 
 export default function ProfileUser() {
   // const router = useRouter();
@@ -60,7 +62,6 @@ export default function ProfileUser() {
         if (response.status === 200) {
           console.log(response.data);
           setTeam(response.data);
-          
         }
       })
       .catch((error) => {
@@ -70,11 +71,27 @@ export default function ProfileUser() {
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    setCompany((date) => ({
-      ...date,
+    if(key === "cnpj"){
+       value.length < 19
+        ? setCompany((company) => ({
+            ...company,
 
-      [key]: value,
-    }));
+            [key]: cnpjMask(value),
+          }))
+        : null
+         }else if(key === "tel"){
+          value.length < 16
+          ? setCompany((company) => ({
+            ...company,
+
+            [key]: phoneMask(value),
+          }))
+          : null
+         }else{  setCompany((company) => ({
+          ...company,
+          [key]: value,
+        }));
+      }
   };
   const submitData = (prop) => {
     const newData = { id: company.id, [prop]: company[prop] };
@@ -92,7 +109,7 @@ export default function ProfileUser() {
       });
   };
   const handleInviteTeam = async () => {
-   const companyId = company.id
+    const companyId = company.id;
     for (let data in emails) {
       console.log(data, "DATAA");
       if (emails[data] == "") {
@@ -101,9 +118,9 @@ export default function ProfileUser() {
     }
 
     const team = Object.values(emails);
-  
-    console.log(team, "TEAM", companyId)
-    
+
+    console.log(team, "TEAM", companyId);
+
     if (team.length > 0) {
       await axios
         .post("../api/Users/user", {
@@ -116,24 +133,22 @@ export default function ProfileUser() {
           console.log(response);
           if (response.status == 200) {
             console.log(response);
-            await getTeam(companyId)
-            let newField = {}
-            setEmails(newField)
-           
+            await getTeam(companyId);
+            let newField = {};
+            setEmails(newField);
           }
         })
         .catch((error) => {
           console.log(error);
         });
-        
     }
   };
   useEffect(() => {
     Payload(appToken);
   }, []);
   useEffect(() => {
-    console.log(emails)
-  }, [emails]);
+    console.log(company);
+  }, [company]);
   return (
     <S.Container>
       <S.Tab>
@@ -246,10 +261,10 @@ export default function ProfileUser() {
               </span>
               <DynamicInput emails={emails} setEmails={setEmails} />
               <ButtonSubmit
-          Text="CONCLUIR CADASTRO"
-          Icon={faArrowRight}
-          onClick={handleInviteTeam}
-        />
+                Text="CONCLUIR CADASTRO"
+                Icon={faArrowRight}
+                onClick={handleInviteTeam}
+              />
             </S.Invite>
           </section>
         </S.MyTeam>

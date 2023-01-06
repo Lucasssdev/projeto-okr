@@ -14,6 +14,10 @@ import ButtonSubmit from "../../../assets/Componets/Buttons/ButtonSubmit";
 import Header from "../../../assets/Layout/GuestLayout/Componets/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
+import phoneMask from "../../../assets/Mask/phoneMask";
+import nameMask from "../../../assets/Mask/nameMask";
+import firstLetterUppercase from "../../../assets/Mask/firstLetterUppercase";
+import emailMaskTest from "../../../assets/Mask/emailMasktest";
 
 export default function CreateAccount() {
   const router = useRouter();
@@ -32,41 +36,85 @@ export default function CreateAccount() {
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    setAdm((data) => ({
-      ...data,
+    if (key === "tel") {
+      value.length < 16
+        ? setAdm((user) => ({
+            ...user,
 
-      [key]: value,
-    }));
-    console.log(adm);
-  };
-  const handleOnForm = () => {
-    if (adm.password == adm.password2) {
-      delete adm.password2;
-      console.log(adm);
+            [key]: phoneMask(value),
+          }))
+        : null;
+    } else if (key == "name") {
+      setAdm((user) => ({
+        ...user,
 
-      axios
-        .post("../api/Users/user", {
-          data: {
-            adm,
-          },
-        })
-        .then(async function (response) {
-          console.log(response);
-          if (response.status == 200) {
-            router.push({
-              pathname: "/register/inviteTeam",
-              query: { companyId: response.data.companyId },
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          //router.push("/login");
-        });
+        [key]: nameMask(value),
+      }));
+    } else if (key == "company") {
+      setAdm((user) => ({
+        ...user,
+
+        [key]: firstLetterUppercase(value),
+      }));
     } else {
-      alert("As senhas não são iguais");
-      return;
+      setAdm((user) => ({
+        ...user,
+
+        [key]: value,
+      }));
     }
+  };
+  const validationFields = (e) => {
+    e.preventDefault();
+    if (!nextScreen) {
+      if (
+        adm.name != "" &&
+        adm.company != "" &&
+        adm.tel.length > 14 &&
+        !nextScreen
+      ) {
+        setNextScreen(true);
+      } else if (!nextScreen) {
+        alert("Preencha corretamente os campos");
+        return;
+      }
+    } else {
+      if (emailMaskTest(adm.email) && adm.password != "") {
+    
+        if (adm.password == adm.password2 ) {
+          delete adm.password2;
+          console.log(adm);
+          handleOnForm(adm);
+        } else {
+          alert("As senhas não são iguais");
+          return;
+        }
+      } else {
+        alert("E-mail ou senha inválidos");
+        return;
+      }
+    }
+  };
+  const handleOnForm = async () => {
+    await axios
+      .post("../api/Users/user", {
+        data: {
+          adm,
+        },
+      })
+      .then(async function (response) {
+        console.log(response);
+        if (response.status == 200) {
+          router.push({
+            pathname: "/register/inviteTeam",
+            query: { companyId: response.data.companyId },
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        //router.push("/login");
+      });
   };
 
   return (
@@ -75,7 +123,7 @@ export default function CreateAccount() {
         Title="Crie sua conta"
         SubTitle="Sua alta performance te aguarda no lado da produtividade"
       />
-      <section>
+      <S.Form>
         {!nextScreen ? (
           <>
             <Input
@@ -106,9 +154,7 @@ export default function CreateAccount() {
             <ButtonSubmit
               Text="Próximo passo"
               Icon={faArrowRight}
-              onClick={() => {
-                setNextScreen(true);
-              }}
+              onClick={validationFields}
             />
           </>
         ) : (
@@ -140,7 +186,7 @@ export default function CreateAccount() {
             <ButtonSubmit
               Text="Próximo passo"
               Icon={faArrowRight}
-              onClick={handleOnForm}
+              onClick={validationFields}
             />
           </>
         )}
@@ -149,7 +195,7 @@ export default function CreateAccount() {
             Já tem uma conta? <a href="../login">CLIQUE AQUI</a>
           </span>
         </S.Link>
-      </section>
+      </S.Form>
     </S.Container>
   );
 }

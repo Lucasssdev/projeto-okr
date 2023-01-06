@@ -26,6 +26,7 @@ export const Div = styled.button`
     }
   }
   img {
+    background-color: #a593f3;
     border-radius: 50%;
     object-fit: cover;
   }

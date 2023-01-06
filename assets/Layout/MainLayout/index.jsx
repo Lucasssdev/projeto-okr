@@ -19,6 +19,7 @@ import { deleteCookie } from "cookies-next";
 import DialogCreateOkr from "../../Componets/Modal";
 import userProfile from "../../../public/userProfile.svg";
 import axios from "axios";
+//import create from 'zustand'
 
 export default function MainLayout({ children }) {
   const router = useRouter();
@@ -41,8 +42,9 @@ export default function MainLayout({ children }) {
       .get("../api/Users/user?id=" + id)
       .then(function (response) {
         if (response.status === 200) {
+          return response.data,
           setUser(response.data);
-          console.log(response.data);
+          //console.log(response.data);
           //setBase64code(response.data.imageProfile);
         }
       })
@@ -54,7 +56,13 @@ export default function MainLayout({ children }) {
     deleteCookie("userLogged");
     router.push("/login");
   };
-
+  /*const myUser = create((set) => ({
+    myUser: user,
+    get: async () => {const update = await getUser(user.id)
+    set(state => ({ update }));
+    },
+  }))
+  console.log(myUser,'USERRR')*/
   const imageProfile = user.imageProfile ?? userProfile;
   useEffect(() => {
     payload(appToken);
@@ -63,66 +71,7 @@ export default function MainLayout({ children }) {
     console.log(user);
   }, [user]);
 
-  /* const admin = dados?.admin || false;
-    console.log(admin)
-    const empresa = dados?.company || null;
-
-    const [search,setSearch] = useState({
-        string: ''
-    })
-    const [result,setResult] = useState([])
-    const [showSearch,setShowSearch] = useState(false)
-
-   
-    
-    const getSearch= async (namePatrimony)=>{
-   
-        console.log(namePatrimony);
-        
-        await axios.get('http://localhost:3001/patrimony/patrimonies/search',{
-            params: {name: namePatrimony, codEmpresa: empresa.id,},
-        })
-        .then((res)=>{
-            console.log('BUSCANDO')
-            console.log(res.data,'++++++++++++')
-            setResult(res.data)  ;
-        })
-        //return patrimonies;
-    }
-    
-    const submitSearch= async ()=>{
-        console.log('Realizando a busca...')
-       const result = await  getSearch(search.patrimony);
-        console.log('Dados da busca ');
-        console.table( result);
-    }
-
-    const handleOnSearch = async (e) => {  
-        const key = e.target.id;
-        const value = e.target.value;
-           
-            setSearch((search) => (
-                value == ' '
-                ?{ 
-                    ...search,
-                    [key]:  value.trim(),
-                }
-                :{
-                    ...search,
-                    [key]:  value,
-                }
-            ));
-
-            if( value != '' && value != ' '){
-                console.log('entrou')
-                 await getSearch(value)
-                setShowSearch(true)
-            }else{
-                setShowSearch(false)
-            }
-             
-    }
-    */
+ 
   return (
     <S.Container>
       <S.Main>
@@ -157,13 +106,7 @@ export default function MainLayout({ children }) {
                 router.push("/profile/user");
               }}
             />
-            <ButtonMain
-              Route={""}
-              Icon={faSignIn}
-              Text={"Sair do Gestor OKR"}
-              onClick={logout}
-            />
-            <ButtonMain
+             <ButtonMain
               Route={"/profile/company"}
               Icon={faBuilding}
               Text={company.name}
@@ -171,6 +114,13 @@ export default function MainLayout({ children }) {
                 router.push("/profile/company");
               }}
             />
+            <ButtonMain
+              Route={""}
+              Icon={faSignIn}
+              Text={"Sair do Gestor OKR"}
+              onClick={logout}
+            />
+           
           </S.Footer>
         </S.Options>
       </S.Main>
@@ -190,3 +140,4 @@ export default function MainLayout({ children }) {
     </S.Container>
   );
 }
+
