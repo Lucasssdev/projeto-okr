@@ -3,7 +3,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb'
+    }
+  }
+}
 
 const createUser = async (users) => {
   let message = "";
@@ -34,14 +40,14 @@ const createUser = async (users) => {
 
       await prisma.$disconnect();
       return newAdm;
-    } catch {
-      async (e) => {
+    } catch (e)  {
+      
         console.error(e);
         message = "falha ao cadastrar Admin!";
         console.log(message);
         await prisma.$disconnect();
         process.exit(1);
-      };
+      
     }
   }
   if (users.team) {
@@ -96,10 +102,10 @@ const getAllUsers = async (companyId) => {
     where: {
       companyId: companyId,
     },
-    //include:{ company: true,}
+    include:{ company: true,}
   });
   await prisma.$disconnect();
-
+  console.log(users,'USERS')
   return users;
 };
 const getUser = async (id) => {
@@ -157,6 +163,7 @@ const deleteUser = async (id) => {
   return message;
 };
 const updateUser = async (user) => {
+  console.log(user)
   let message = "";
   await prisma.$connect();
   await prisma.users
@@ -202,8 +209,11 @@ export default async function handler(request, response) {
     const message = await deleteUser(request.body.id);
     response.status(200).json(message);
   } else if (method == "PUT") {
-    const message = await updateUser(request.body.data);
-    response.status(200).json(message);
+   
+      const message = await updateUser(request.body.data);
+      response.status(200).json(message);
+    
+    
   } else {
     response.status(404).json("Não encontrado");
   }

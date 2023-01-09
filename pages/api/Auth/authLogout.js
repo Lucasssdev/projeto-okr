@@ -1,13 +1,11 @@
-import { deleteCookie } from "cookies-next";
-export function getSeverSideProps(context) {
-  console.log(context)
- 
-}
 
+import { evokingToken } from "../../../src/jwt/evokingToken";
 
 export default async function handler(request) {
   console.log(request.cookies, "REQ");
-  deleteCookie('userLogged')
-  return request.redirect(new URL('/login', request.url))  
+  const newToken = await evokingToken(request.cookies)
+  console.log(newToken)
+  return newToken
+ 
   
 }

@@ -19,7 +19,7 @@ export const isValid = async (cookie) => {
    *
    */
   const  decode = jose.decodeJwt(jwt) 
-  console.log(decode.exp,'**')
+  //console.log(decode.exp,'**')
    if (decode.exp < Date.now() / 1000){
     return false
   }else{

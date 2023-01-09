@@ -9,16 +9,17 @@ export const Container = styled.div`
     gap: 50px;
     max-height: 300px;
     
-  
-    section{
+`  
+export const Form = styled.form`
+   
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
         
-    }
     
-`  
+    
+`
 export const Link = styled.div`
     
     margin: 25px 0px;

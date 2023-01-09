@@ -10,6 +10,8 @@ import DynamicInput from "../../../assets/Componets/Inputs/DynamicInput";
 import { useRouter } from "next/router";
 import { setCookie } from "cookies-next";
 import axios from "axios";
+import emailMaskTest from "../../../assets/Mask/emailMasktest";
+
 export default function InviteTeam() {
   const router = useRouter();
   const companyId = router.query.companyId;
@@ -20,51 +22,66 @@ export default function InviteTeam() {
     secondEmail: "",
   });
 
-  const handleInviteTeam = async () => {
-    await getadm(companyId);
+  const validationEmails = (emails) => {
     for (let data in emails) {
       console.log(data, "DATAA");
       if (emails[data] == "") {
         delete emails[data];
+      } 
+    } 
+    for (let data in emails) {
+      console.log(data, "DATAA");
+      if (emailMaskTest(emails[data]) == false) {
+        return false;
       }
-    }
-
-    const team = Object.values(emails);
-
-    console.log(team, "TEAM");
-    if (team.length > 0) {
-      await axios
-        .post("../api/Users/user", {
-          data: {
-            team,
-            companyId,
-          },
-        })
-        .then(async function (response) {
-          console.log(response);
-          if (response.status == 200) {
-            console.log(response);
-           
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    } 
+    console.log(emails)
+    return true
    
   };
-  const makeLogin = async (idAdm) => {
-    console.log(idAdm,'LOGIN')
+  const handleInviteTeam = async (e) => {
+    e.preventDefault();
+    await getadm(companyId);
+
+    if (!validationEmails(emails) ) {
+      alert("Verifique os e-mails");
+      return;
+    } else {
+      const team = Object.values(emails);
+
+      console.log(team, "TEAM");
     
+      if (team.length > 0) {
+        await axios
+          .post("../api/Users/user", {
+            data: {
+              team,
+              companyId,
+            },
+          })
+          .then(async function (response) {
+            console.log(response);
+            if (response.status == 200) {
+              console.log(response);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  };
+  const makeLogin = async (idAdm) => {
+    console.log(idAdm, "LOGIN");
+
     await axios
       .post("../api/Auth/authLogin", {
         data: idAdm,
         withCredentials: true,
       })
       .then(function (response) {
-        
         setCookie("userLogged", response.data);
-        router.reload()
+        router.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -73,21 +90,19 @@ export default function InviteTeam() {
   };
   const getadm = async (id) => {
     console.log(id, "ID");
-    axios
+    await axios
       .get("../../api/Users/user?companyId=" + id)
       .then(function (response) {
         if (response.status === 200) {
           console.log(response.data);
-          const arrUser = response.data
-          console.log(arrUser)
-          for( var i = 0 ; i< arrUser.length; i++){
-            console.log(arrUser[i])
+          const arrUser = response.data;
+          console.log(arrUser);
+          for (var i = 0; i < arrUser.length; i++) {
+            console.log(arrUser[i]);
             if (arrUser[i].permission == "1") {
-              
               setAdmin(arrUser[i]);
             }
           }
-        
         }
       })
       .catch((error) => {
@@ -96,8 +111,7 @@ export default function InviteTeam() {
   };
 
   useEffect(() => {
-    if(admin.id)
-    makeLogin(admin.id)
+    if (admin.id) makeLogin(admin.id);
   }, [admin]);
 
   return (

@@ -2,27 +2,38 @@ import { PrismaClient } from "@prisma/client";
 //import axios from "axios";
 const prisma = new PrismaClient();
 
-const createSector = async (sector) => {
-  console.log(sector);
+const createKeys = async (keys) => {
+  console.log(keys);
   await prisma.$connect();
+  let newKeys = 0;
   try {
-    const newSector = await prisma.sectors.create({
-      data: {
-        name: sector.name,
-        company_id: sector.companyId,
-      },
+  keys.map(async (myKey) => {
+    console.log(myKey)
+    
+      const newkey = await prisma.key.create({
+        data: {
+          title: myKey.title,
+          okr_id: myKey.okrId,
+         // dateToCompletion: myKey.dateToCompletion,
+        },
+      });
+      console.log(newkey);
+      newKeys++
     });
-    console.log(newSector);
     await prisma.$disconnect();
-    return newSector;
-  } catch (e) {
-    console.error(e);
-    await prisma.$disconnect();
-    return "Falha ao criar setor";
-  }
+    console.log(newKeys)
+    return newKeys;
+    } catch {
+      async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        return "Falha ao criar keys";
+      };
+    }
+ 
 };
 
-const getAllSector = async (companyId) => {
+const getAllOkrs = async (companyId) => {
   await prisma.$connect();
 
   const sectors = await prisma.sectors.findMany({
@@ -35,7 +46,7 @@ const getAllSector = async (companyId) => {
   console.log(sectors);
   return sectors;
 };
-const getSector = async (id) => {
+const getOkr = async (id) => {
   // console.log(id)
   await prisma.$connect();
 
@@ -47,7 +58,7 @@ const getSector = async (id) => {
 
   return sector;
 };
-const deleteSector = async (id) => {
+const deleteOkr = async (id) => {
   let message = "";
   await prisma.$connect();
   await prisma.sectors
@@ -68,7 +79,7 @@ const deleteSector = async (id) => {
   return message;
 };
 
-const updateSector = async (sector) => {
+const updateOkr = async (sector) => {
   let message = "";
   try {
     await prisma.$connect();
@@ -99,25 +110,21 @@ export default async function handler(request, response) {
   const method = request.method;
 
   if (method == "POST") {
-    try {
-      const message = await createSector(request.body.data);
-      response.status(200).json(message);
-    } catch (err) {
-      console.log(err);
-    }
+    const message = await createKeys(request.body);
+    response.status(200).json(message);
   } else if (method == "GET") {
     if (request.query.companyId) {
-      const sectors = await getAllSector(request.query.companyId);
+      const sectors = await getAllOkrs(request.query.companyId);
       response.status(200).json(sectors);
     } else {
-      const sector = await getSector(request.query?.id || null);
+      const sector = await getOkr(request.query?.id || null);
       response.status(200).json(sector);
     }
   } else if (method == "DELETE") {
-    const message = await deleteSector(request.query?.id || null);
+    const message = await deleteOkr(request.query?.id || null);
     response.status(200).json(message);
   } else if (method == "PUT") {
-    const message = await updateSector(request.body);
+    const message = await updateOkr(request.body);
     response.status(200).json(message);
   } else {
     response.status(404).json("Não encontrado");

@@ -54,6 +54,7 @@ export const Box = styled.div`
   color: ${settingsCss.colorDetails};
   font-weight: 700;
   font-size: 46px;
+  font-family: 'Jost', sans-serif;
 
   span {
     color: white;
