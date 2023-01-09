@@ -1,14 +1,14 @@
-import GuestLayout from "../assets/Layout/GuestLayout";
-import * as S from "../assets/Styles/Login";
+import GuestLayout from "../../assets/Layout/GuestLayout";
+import * as S from "../../assets/Styles/Login";
 import React, { useState } from "react";
-import Input from "../assets/Componets/Inputs/Input";
+import Input from "../../assets/Componets/Inputs/Input";
 import {
   faLock,
   faArrowRight,
   faEnvelope,
 } from "@fortawesome/pro-thin-svg-icons";
-import ButtonSubmit from "../assets/Componets/Buttons/ButtonSubmit";
-import Header from "../assets/Layout/GuestLayout/Componets/Header";
+import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
+import Header from "../../assets/Layout/GuestLayout/Componets/Header";
 import { getCookie, setCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -50,7 +50,7 @@ export default function Login() {
   const verifyIfCookieExists = async () => {
     const cookieExists = getCookie("userLogged");
     if (cookieExists) {
-      router.push("/");
+      router.push("/dashboard");
     }
   };
   verifyIfCookieExists();

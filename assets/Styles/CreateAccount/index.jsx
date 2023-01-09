@@ -6,19 +6,20 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap:100px;
+    gap: 50px;
     max-height: 300px;
-  
-    section{
+    
+`  
+export const Form = styled.form`
+   
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
-        justify-content: center;
-        max-height: 700px;
-    }
+        
     
-`  
+    
+`
 export const Link = styled.div`
     
     margin: 25px 0px;

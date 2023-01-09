@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/register/updatePassword.jsx", "pages/register/newPassword.jsx", "pages/register/inviteTeam.jsx", "pages/register/createAccount.jsx"  ],
+, "pages/register/updatePassword/index.jsx", "pages/register/newPassword/index.jsx", "pages/register/inviteTeam/index.jsx", "pages/register/createAccont/index.jsx"  ],
   "exclude": [
     "node_modules"
   ]

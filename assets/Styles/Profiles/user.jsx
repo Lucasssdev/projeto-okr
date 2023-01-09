@@ -3,7 +3,8 @@ import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div`
   width: 90%;
-  height: 100vh;
+  height: 500vh;
+  margin-top: 30px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   background-color: ${settingsCss.colorPrimary};
@@ -48,7 +49,7 @@ export const ImageDiv = styled.div`
   gap: 25px;
   display: flex;
   padding-top: 60px;
-  a {
+  label {
     text-transform: uppercase;
     font-weight: 400;
     font-size: 16px;
@@ -56,6 +57,9 @@ export const ImageDiv = styled.div`
       color: ${settingsCss.colorDetails};
       cursor: pointer;
     }
+  }
+  input{
+    display: none;
   }
 `;
 export const Image = styled.div`
@@ -66,6 +70,12 @@ export const Image = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  img{
+    border-radius: 50%;
+    
+    object-fit: cover;
+  }
+ 
 `;
 export const Data = styled.div`
   input {
@@ -104,5 +114,8 @@ export const DivPass = styled.div`
       color: #999999;
 
     }
+  }
+  button{
+    width:  500px;
   }
 `;

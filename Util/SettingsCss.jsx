@@ -10,7 +10,7 @@ const settingsCss = {
      greenHover : '#06ff97',
      colorTextBlack : '#181818',
      colorTextLinkHover : ' #c1b5f6',
-    // font100: "'Jost' , sans-serif",
+    coloTextMain:'#7A7A7A'
 
 
 }

@@ -7,11 +7,12 @@ import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
 import { getCookie } from "cookies-next";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
-import {
-  
-  faArrowRight,
-  
-} from "@fortawesome/pro-thin-svg-icons";
+import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
+import Image from "next/image";
+import userProfile from '../../public/userProfile.svg'
+import cpfMask from "../../assets/Mask/cpfMask";
+import phoneMask from "../../assets/Mask/phoneMask";
+//import { useStore } from '../../assets/Layout/MainLayout'
 export default function ProfileUser() {
   // const router = useRouter();
   const [tabPass, setTabPass] = useState(false);
@@ -20,44 +21,63 @@ export default function ProfileUser() {
     cpf: "",
     tel: "",
     email: "",
-    password:'',
+    password: "",
     passwordCurrent: "",
-    newPassword1:'',
-    newPassword2:''
+    newPassword1: "",
+    newPassword2: "",
   });
- 
+  //const {myUser ,get } = useStore()
+  //console.log(myUser,'MYUSER')
   const appToken = getCookie("userLogged") ?? null;
 
   const Payload = async (token) => {
     const payload = await isValid(token);
-    console.log(payload.user,'++')
-    getUser(payload.user.id)
-    
+    console.log(payload.user, "++");
+    getUser(payload.user.id);
   };
 
-  const getUser = (id) => {
-    console.log(id,'ID')
-    axios.get("../api/Users/user?id="+id
-
-    ).then(function (response) {
-        if(response.status === 200){ 
-            setUser(response.data)
-            console.log(response.data)
-            
+  const getUser = async (id) => {
+    console.log(id, "ID");
+    await axios
+      .get("../api/Users/user?id=" + id)
+      .then(function (response) {
+        if (response.status === 200) {
+          setUser(response.data);
+          console.log(response.data);
+          //setBase64code(response.data.imageProfile);
         }
-    }).catch(error => {return error, console.log('nao foii')}); 
-            
-    }
+      })
+      .catch((error) => {
+        return error, console.log("nao foii");
+      });
+  };
 
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    setUser((date) => ({
-      ...date,
+    if(key === 'cpf'){
+      setUser((user) => ({
+          ...user,
+          
+          [key]: cpfMask(value),
+      }));
+    }else if(key === "tel"){
+      value.length < 16
+      ? setUser((user) => ({
+        ...user,
 
-      [key]: value,
-    }));
+        [key]: phoneMask(value),
+      }))
+      : null
+  }else{
+      setUser((user) => ({
+          ...user,
+          
+          [key]: value,
+      }));
+  }
   };
+
   const submitData = (prop) => {
     const newData = { id: user.id, [prop]: user[prop] };
     axios
@@ -75,34 +95,64 @@ export default function ProfileUser() {
   };
 
   const handlePassword = async () => {
-    if(user.newPassword1 == user.newPassword2){
-      const newPass = { id: user.id, newPassword: user.newPassword1, currentPassword: user.passwordCurrent, bdPassword: user.password };
-      axios.put("../api/Users/password", {
-        data: newPass
-      })
-      .then(function (response) {
-        console.log("+++", response);
-        Payload(appToken);
-        setUser({
-          ...user,
-          passwordCurrent: "",
-          newPassword1:'',
-          newPassword2:''
+    if (user.newPassword1 == user.newPassword2) {
+      const newPass = {
+        id: user.id,
+        newPassword: user.newPassword1,
+        currentPassword: user.passwordCurrent,
+        bdPassword: user.password,
+      };
+      await axios
+        .put("../api/Users/password", {
+          data: newPass,
         })
-      })
-      .catch((error) => {
-        console.log(error);
-        //router.push("/login");
-      });
+        .then(function (response) {
+          console.log("+++", response);
+          Payload(appToken);
+          setUser({
+            ...user,
+            passwordCurrent: "",
+            newPassword1: "",
+            newPassword2: "",
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          //router.push("/login");
+        });
     }
-  }
+  };
 
+
+  async function handleImageChange(event) {
+    const file = event.target.files[0]
+    console.log(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      console.log(reader);
+
+      await axios
+        .put("../api/Users/user", {
+          data: { id: user.id, imageProfile: reader.result },
+        })
+        .then(function (response) {
+          console.log("+++", response);
+          getUser(user.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+  }
+  
   useEffect(() => {
     Payload(appToken);
   }, []);
   useEffect(() => {
     console.log(user);
   }, [user]);
+
   return (
     <S.Container>
       <S.Tab>
@@ -132,10 +182,18 @@ export default function ProfileUser() {
       {!tabPass ? (
         <S.Profile>
           <S.ImageDiv>
-            <S.Image>photo</S.Image>
-            <a>
+            <S.Image>
+              <Image
+                src={user.imageProfile ?? userProfile }
+                alt="Select image"
+                width="200"
+                height="200"
+              />
+            </S.Image>
+            <label htmlFor="imgProfile">
               alterar <strong>imagem</strong>
-            </a>
+            </label>
+            <input type="file" id="imgProfile" onChange={handleImageChange} />
           </S.ImageDiv>
           <S.Data>
             <EditInput
@@ -174,7 +232,7 @@ export default function ProfileUser() {
         <S.DivPass>
           <p>Altere sua senha</p>
           <EditInput
-            Placeholder={'Digite aqui a senha que você usa para logar'}
+            Placeholder={"Digite aqui a senha que você usa para logar"}
             Label={"Senha atual"}
             Type={"password"}
             onChange={handleOnChange}
@@ -182,7 +240,7 @@ export default function ProfileUser() {
             Id={"passwordCurrent"}
           />
           <EditInput
-            Placeholder={'Digite aqui a sua nova senha'}
+            Placeholder={"Digite aqui a sua nova senha"}
             Label={"Nova senha"}
             Type={"password"}
             onChange={handleOnChange}
@@ -190,14 +248,18 @@ export default function ProfileUser() {
             Id={"newPassword1"}
           />
           <EditInput
-            Placeholder={'Repita a nova senha'}
+            Placeholder={"Repita a nova senha"}
             Label={"Confirme a nova senha"}
             Type={"password"}
             onChange={handleOnChange}
             Value={user.newPassword2}
             Id={"newPassword2"}
           />
-          <ButtonSubmit Text={'Alterar'} onClick={handlePassword} Icon={faArrowRight}/>
+          <ButtonSubmit
+            Text={"Alterar"}
+            onClick={handlePassword}
+            Icon={faArrowRight}
+          />
         </S.DivPass>
       )}
     </S.Container>

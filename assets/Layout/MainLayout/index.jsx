@@ -11,16 +11,15 @@ import {
   faBookBookmark,
   faSignIn,
   faMagnifyingGlass,
-  faPlusCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from "@fortawesome/pro-regular-svg-icons";
 import { getCookie } from "cookies-next";
 import { isValid } from "../../../src/jwt/isValidToken";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
-
-
-
+import DialogCreateOkr from "../../Componets/Modal";
+import userProfile from "../../../public/userProfile.svg";
+import axios from "axios";
+//import create from 'zustand'
 
 export default function MainLayout({ children }) {
   const router = useRouter();
@@ -30,21 +29,41 @@ export default function MainLayout({ children }) {
 
   const payload = async (token) => {
     const payload = await isValid(token);
-    setUser({
-      id: payload?.user.id,
-      name: payload?.user.name,
-      email: payload?.user.email,
-    });
+    getUser(payload?.user.id);
     setCompany({
       id: payload?.user.company.id,
       name: payload?.user.company.name,
-    })
+    });
   };
 
+  const getUser = async (id) => {
+    console.log(id, "ID");
+    await axios
+      .get("../api/Users/user?id=" + id)
+      .then(function (response) {
+        if (response.status === 200) {
+          return response.data,
+          setUser(response.data);
+          //console.log(response.data);
+          //setBase64code(response.data.imageProfile);
+        }
+      })
+      .catch((error) => {
+        return error, console.log("nao foii");
+      });
+  };
   const logout = () => {
-    deleteCookie('userLogged')
-    router.push('/login')
-  }
+    deleteCookie("userLogged");
+    router.push("/login");
+  };
+  /*const myUser = create((set) => ({
+    myUser: user,
+    get: async () => {const update = await getUser(user.id)
+    set(state => ({ update }));
+    },
+  }))
+  console.log(myUser,'USERRR')*/
+  const imageProfile = user.imageProfile ?? userProfile;
   useEffect(() => {
     payload(appToken);
   }, []);
@@ -52,103 +71,56 @@ export default function MainLayout({ children }) {
     console.log(user);
   }, [user]);
 
-  /* const admin = dados?.admin || false;
-    console.log(admin)
-    const empresa = dados?.company || null;
-
-    const [search,setSearch] = useState({
-        string: ''
-    })
-    const [result,setResult] = useState([])
-    const [showSearch,setShowSearch] = useState(false)
-
-   
-    
-    const getSearch= async (namePatrimony)=>{
-   
-        console.log(namePatrimony);
-        
-        await axios.get('http://localhost:3001/patrimony/patrimonies/search',{
-            params: {name: namePatrimony, codEmpresa: empresa.id,},
-        })
-        .then((res)=>{
-            console.log('BUSCANDO')
-            console.log(res.data,'++++++++++++')
-            setResult(res.data)  ;
-        })
-        //return patrimonies;
-    }
-    
-    const submitSearch= async ()=>{
-        console.log('Realizando a busca...')
-       const result = await  getSearch(search.patrimony);
-        console.log('Dados da busca ');
-        console.table( result);
-    }
-
-    const handleOnSearch = async (e) => {  
-        const key = e.target.id;
-        const value = e.target.value;
-           
-            setSearch((search) => (
-                value == ' '
-                ?{ 
-                    ...search,
-                    [key]:  value.trim(),
-                }
-                :{
-                    ...search,
-                    [key]:  value,
-                }
-            ));
-
-            if( value != '' && value != ' '){
-                console.log('entrou')
-                 await getSearch(value)
-                setShowSearch(true)
-            }else{
-                setShowSearch(false)
-            }
-             
-    }
-    */
+ 
   return (
     <S.Container>
       <S.Main>
         <S.Logo>
-          <Image width={250} src={logoPurple} alt="logo" />
+          <Image width={200} src={logoPurple} alt="logo" />
         </S.Logo>
         <S.Options>
           <div>
-            <ButtonMain Icon={faHouse} Text={"Inicio"} onClick={""} />
             <ButtonMain
+              Route={"/dashboard"}
+              Icon={faHouse}
+              Text={"Inicio"}
+              onClick={() => {
+                router.push("/dashboard");
+              }}
+            />
+            <ButtonMain
+              Route={"/sectors"}
               Icon={faBookBookmark}
               Text={"Setor"}
               onClick={() => {
-                router.push("/a");
+                router.push("/sectors");
               }}
             />
           </div>
           <S.Footer>
-          <S.Profile
-              onClick={() => {
-                router.push("/profile/company");
-              }}
-            >
-              {" "}
-              <FontAwesomeIcon icon={faBuilding} size="xl" />
-              {company.name}
-            </S.Profile>
-            <S.Profile
+            <ButtonMain
+              Route={"/profile/user"}
+              image={imageProfile}
+              Text={user.name}
               onClick={() => {
                 router.push("/profile/user");
               }}
-            >
-              {" "}
-              <FontAwesomeIcon icon={faPlusCircle} size="xl" />
-              {user.name}
-            </S.Profile>
-            <ButtonMain Icon={faSignIn} Text={"Sair do Gestor OKR"} onClick={logout} />
+            />
+             <ButtonMain
+              Route={"/profile/company"}
+              Icon={faBuilding}
+              Text={company.name}
+              onClick={() => {
+                router.push("/profile/company");
+              }}
+            />
+            <ButtonMain
+              Route={""}
+              Icon={faSignIn}
+              Text={"Sair do Gestor OKR"}
+              onClick={logout}
+            />
+           
           </S.Footer>
         </S.Options>
       </S.Main>
@@ -160,12 +132,7 @@ export default function MainLayout({ children }) {
               Icon={faMagnifyingGlass}
             />
           </S.Search>
-          <S.Button>
-            <span>
-              Adicionar <strong>OKR</strong>
-            </span>
-            <FontAwesomeIcon icon={faPlusCircle} size="xl" />
-          </S.Button>
+          <DialogCreateOkr user={user.id} company={company.id} />
         </S.Header>
         {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
         <article>{children}</article>
@@ -173,3 +140,4 @@ export default function MainLayout({ children }) {
     </S.Container>
   );
 }
+

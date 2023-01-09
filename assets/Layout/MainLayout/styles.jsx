@@ -7,23 +7,21 @@ export const Container = styled.div`
   background: ${settingsCss.colorSecond};
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 280px auto;
-  align-items: center;
-  overflow-y: auto;
+  grid-template-columns: 220px auto;
+  overflow-y: hidden;
+  
 `;
 
 export const ContainerMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  display: grid;
+  grid-template-rows: auto auto;
+ //background-color: aqua;
   height: 100vh;
   article {
     display: flex;
     flex-direction: column;
     align-items: center !important;
     width: 100%;
-    padding-top: 30px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -51,17 +49,8 @@ export const Options = styled.div`
   font-weight: 400;
   font-size: 14px;
   button {
-    div {
-      display: none;
-    }
-    padding: 40px 20px;
-    margin-bottom: 10px;
-    background: transparent;
-    border: hidden;
-    text-align: start;
-    &:hover {
-      cursor: pointer;
-    }
+  
+    
   }
   div {
     display: flex;
@@ -84,15 +73,17 @@ export const Options = styled.div`
   }
 `;
 export const Header = styled.div`
-  width: calc(100vw - 280px);
+  width: 100%;
   height: 85px !important;
   display: flex;
   justify-content: space-between;
+
   align-items: center;
   background: ${settingsCss.colorPrimary};
   padding: 40px 30px;
 `;
 export const Search = styled.div``;
+
 export const Button = styled.button`
   * {
     transition-duration: 1s;
@@ -133,14 +124,16 @@ export const Logo = styled.image`
 export const Footer = styled.div`
  display: flex;
  flex-direction: column;
- gap: 20px;
+
 `;
 export const Profile = styled.button`
   font-weight: 400;
   font-size: 14px;
+  height: 25px;
   display: flex;
   padding: 0px 20px !important;
   gap: 20px;
+  
   &:hover {
     cursor: pointer;
 

@@ -42,7 +42,7 @@ const updateCompany = async (company) => {
 };
 
 export default async function handler(request, response) {
-  console.log(request.query, "REQQQ");
+  console.log(request.body, "REQQQ");
   const method = request.method;
 
   if (method == "GET") {
