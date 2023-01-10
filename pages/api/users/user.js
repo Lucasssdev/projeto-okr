@@ -51,7 +51,8 @@ const createUser = async (users) => {
     }
   }
   if (users.team) {
-   //console.log(users.companyId);
+  
+   await prisma.$connect()
     let registered = 0
     try {
      
@@ -60,25 +61,19 @@ const createUser = async (users) => {
         const newUser = {
           email: email,
           name: email.split("@")[0],
-          company: users.companyId,
+          companyId: users.companyId,
           password: crypto.randomBytes(4).toString("hex"),
           permission: "3",
         };
-
-         await prisma.users.create({
-          data: {
-            email: newUser.email,
-            name: newUser.name,
-            companyId: newUser.company,
-            password: newUser.password,
-            permission: newUser.permission,
-          },
+        console.log(newUser)
+        const user = await prisma.users.create({
+          data: newUser
         });
-
+        console.log(user)
        registered++
-        await prisma.$disconnect();
+        
       });
-    
+      await prisma.$disconnect();
       //obs: nao está retornando UsersTeam
       return registered+' usuários criados com sucesso'
     } catch {
@@ -102,7 +97,7 @@ const getAllUsers = async (companyId) => {
     where: {
       companyId: companyId,
     },
-    include:{ company: true,}
+    //include:{ company: true,}
   });
   await prisma.$disconnect();
   console.log(users,'USERS')

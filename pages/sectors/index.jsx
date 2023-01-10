@@ -3,25 +3,20 @@ import * as S from "../../assets/Styles/Sectors";
 import React, { useState, useEffect } from "react";
 import Input from "../../assets/Componets/Inputs/Input";
 import axios from "axios";
-import { getCookie } from "cookies-next";
-import { isValid } from "../../src/jwt/isValidToken";
+import useBearStore from "../../assets/Util/zustand";
+import {Decode, Encode} from "../../src/decodeBase64";
 
 export default function Sectors() {
+
+  const myCompany = useBearStore((state) => state.myCompany);
+  const [company, setCompany] = useState();
   const [sector, setsector] = useState({});
   const [allSector, setAllSector] = useState([]);
+  
+  
+    
 
-  const appToken = getCookie("userLogged") ?? null;
-
-  const Payload = async (token) => {
-    const payload = await isValid(token);
-    console.log(payload?.user, "++");
-    const id = payload?.user.companyId;
-    setsector({
-      name: "",
-      companyId: id,
-    });
-    getSectors(id)
-  };
+  
   const getSectors = async (id) => {
     console.log(id, "ID");
     await axios
@@ -37,6 +32,8 @@ export default function Sectors() {
         return error, console.log("nao foii");
       });
   };
+ 
+
   const createSector = async () => {
     if (sector.name != "") {
       await axios
@@ -66,13 +63,30 @@ export default function Sectors() {
     }));
   };
 
-  useEffect(() => {
-    Payload(appToken);
-  }, []);
+  
   useEffect(() => {
     console.log(allSector);
   }, [allSector]);
-
+  useEffect(() => {
+    console.log(sector);
+  }, [sector]);
+  useEffect(() => {
+    if(myCompany){
+      setCompany(() => Decode(myCompany));
+      
+    }
+    
+  }, [myCompany]);
+  useEffect(() => {
+    if(company){
+      getSectors(company.id)
+      setsector({
+        name: "",
+        company_id: company.id,
+      });
+    }
+    
+  }, [company]);
   return (
     <S.Div>
       <Input

@@ -22,7 +22,7 @@ export default async function updatePassword(request, response) {
   if (!checkPass) {
     message = "Senha atual invalida";
     console.log(message);
-    return response.status(404).json(message);
+    return response.status(404).json("Senha atual invalida");
   } else {
     const newPass = await bcrypt.hash(data.newPassword, 8);
 

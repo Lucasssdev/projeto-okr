@@ -13,9 +13,13 @@ import { getCookie, setCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import useBearStore from "../../assets/Util/zustand";
+import {Base64} from "js-base64";
 
 export default function Login() {
   const router = useRouter();
+  const setMyUser = useBearStore((state) => state.setUser);
+  const setMyCompany = useBearStore((state) => state.setCompany);
 
   const [login, setLogin] = useState({
     email: "",
@@ -33,14 +37,22 @@ export default function Login() {
   };
 
   const makeLogin = async (login) => {
-    axios
+    await axios
       .post("api/Auth/authLogin", {
         data: login,
         withCredentials: true,
       })
       .then(function (response) {
-        setCookie("userLogged", response.data);
-        verifyIfCookieExists()
+        console.log(response);
+        const jsonStringUser = JSON.stringify(response.data.user);
+        const base64EncodedUser = Base64.encode(jsonStringUser);
+        const jsonStringCompany = JSON.stringify(response.data.user.company);
+        const base64EncodedCompany = Base64.encode(jsonStringCompany);
+        setMyUser(base64EncodedUser);
+        setMyCompany(base64EncodedCompany)
+
+        setCookie("userLogged", response.data.newToken);
+        verifyIfCookieExists();
       })
       .catch((error) => {
         console.log(error);
@@ -53,9 +65,10 @@ export default function Login() {
       router.push("/dashboard");
     }
   };
-  verifyIfCookieExists();
+
   useEffect(() => {
-console.log(login)  }, [login]);
+    console.log(login);
+  }, [login]);
   return (
     <S.Container>
       <Header
