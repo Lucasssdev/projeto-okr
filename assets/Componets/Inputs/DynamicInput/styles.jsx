@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import settingsCss from "../../../../Util/SettingsCss";
+import settingsCss from "../../../Util/SettingsCss";
 
 export const Container = styled.div``
 export const NewField = styled.div`

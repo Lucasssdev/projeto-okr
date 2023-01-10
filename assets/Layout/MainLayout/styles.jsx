@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import settingsCss from "../../../Util/SettingsCss";
+import settingsCss from "../../Util/SettingsCss";
 
 export const Container = styled.div`
   width: 100vw;
@@ -13,9 +13,8 @@ export const Container = styled.div`
 `;
 
 export const ContainerMain = styled.div`
-  display: grid;
-  grid-template-rows: auto auto;
- //background-color: aqua;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   article {
     display: flex;

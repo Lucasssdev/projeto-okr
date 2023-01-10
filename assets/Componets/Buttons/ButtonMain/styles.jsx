@@ -1,6 +1,6 @@
 /* eslint-disable */
 import styled from "styled-components";
-import settingsCss from "../../../../Util/SettingsCss";
+import settingsCss from "../../../Util/SettingsCss";
 
 export const Div = styled.button`
   display: flex;

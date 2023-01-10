@@ -3,7 +3,7 @@ import * as S from "../../assets/Styles/Profiles/user";
 import EditInput from "../../assets/Componets/Inputs/EditInput";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import settingsCss from "../../Util/SettingsCss";
+import settingsCss from "../../assets/Util/SettingsCss";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import Image from "next/image";
