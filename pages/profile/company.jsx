@@ -5,55 +5,25 @@ import React, { useEffect, useState } from "react";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import axios from "axios";
-import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
-import { getCookie } from "cookies-next";
 import UserItem from "../../assets/Componets/UserItem";
 import DynamicInput from "../../assets/Componets/Inputs/DynamicInput";
 import cnpjMask from "../../assets/Mask/cnpjMask";
 import phoneMask from "../../assets/Mask/phoneMask";
-
+import useBearStore from "../../assets/Util/zustand";
+import {Decode, Encode} from "../../src/decodeBase64";
 export default function ProfileUser() {
   // const router = useRouter();
+  const setMyCompany = useBearStore((state) => state.setCompany);
+  const myCompany = useBearStore((state) => state.myCompany);
   const [tab, setTab] = useState(1);
   const [team, setTeam] = useState([]);
-  const [company, setCompany] = useState({
-    id: "",
-    name: "",
-    cnpj: "",
-    tel: "",
-    instagram: "",
-    address: "",
-  });
-
+  const [company, setCompany] = useState();
   const [emails, setEmails] = useState({
     firstEmail: "",
     secondEmail: "",
   });
 
-  const appToken = getCookie("userLogged") ?? null;
-
-  const Payload = async (token) => {
-    const payload = await isValid(token);
-    console.log(payload?.user, "++");
-    getCompany(payload?.user.company.id);
-    getTeam(payload?.user.company.id);
-  };
-
-  const getCompany = (id) => {
-    console.log(id, "ID");
-    axios
-      .get("../api/Company/company?id=" + id)
-      .then(function (response) {
-        if (response.status === 200) {
-          setCompany(response.data);
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        return error, console.log("nao foii");
-      });
-  };
   const getTeam = async (id) => {
     console.log(id, "ID");
     await axios
@@ -68,48 +38,49 @@ export default function ProfileUser() {
         return error, console.log("nao foii");
       });
   };
+
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    if(key === "cnpj"){
-       value.length < 19
-        ? setCompany((company) => ({
+    if (key === "cnpj") {
+      value.length < 19
+        ? setCompany({
             ...company,
 
             [key]: cnpjMask(value),
-          }))
-        : null
-         }else if(key === "tel"){
-          value.length < 16
-          ? setCompany((company) => ({
+          })
+        : null;
+    } else if (key === "tel") {
+      value.length < 16
+        ? setCompany({
             ...company,
 
             [key]: phoneMask(value),
-          }))
-          : null
-         }else{  setCompany((company) => ({
-          ...company,
-          [key]: value,
-        }));
-      }
+          })
+        : null;
+    } else {
+      setCompany({
+        ...company,
+        [key]: value,
+      });
+    }
   };
-  const submitData = (prop) => {
-    const newData = { id: company.id, [prop]: company[prop] };
-    axios
+  const submitData = async (e) => {
+    const newData = { id: company?.id, [e.target.id]: e.target.value };
+    await axios
       .put("../api/Company/company", {
         data: newData,
       })
       .then(function (response) {
         console.log("+++", response);
-        Payload(appToken);
+        setMyCompany(Encode(company))
       })
       .catch((error) => {
         console.log(error);
-        //router.push("/login");
       });
   };
   const handleInviteTeam = async () => {
-    const companyId = company.id;
+    const companyId = company?.id;
     for (let data in emails) {
       console.log(data, "DATAA");
       if (emails[data] == "") {
@@ -143,12 +114,15 @@ export default function ProfileUser() {
         });
     }
   };
+
   useEffect(() => {
-    Payload(appToken);
-  }, []);
-  useEffect(() => {
+    if (company) getTeam(company.id);
     console.log(company);
   }, [company]);
+  useEffect(() => {
+    setCompany(() => Decode(myCompany));
+  }, [myCompany]);
+
   return (
     <S.Container>
       <S.Tab>
@@ -196,47 +170,47 @@ export default function ProfileUser() {
           </p>
           <S.Data>
             <EditInput
-              onBlur={() => submitData("name")}
+              onBlur={submitData}
               Label={"Nome da empresa"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={company.name}
+              Value={company?.name}
               Id={"name"}
             />
             <EditInput
-              onBlur={() => submitData("cnpj")}
+              onBlur={submitData}
               Label={"Documento Fiscal (CNPJ)"}
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
-              Value={company.cnpj}
+              Value={company?.cnpj}
               onChange={handleOnChange}
               Id={"cnpj"}
             />
             <EditInput
-              onBlur={() => submitData("instagram")}
+              onBlur={submitData}
               Label={"Perfil do Instagram"}
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={company.instagram}
+              Value={company?.instagram}
               Id={"instagram"}
             />
             <EditInput
-              onBlur={() => submitData("address")}
+              onBlur={submitData}
               Label={"Endereço da empresa"}
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={company.address}
+              Value={company?.address}
               Id={"address"}
             />
             <EditInput
-              onBlur={() => submitData("tel")}
+              onBlur={submitData}
               Label={"DDD + Telefone"}
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={company.tel}
+              Value={company?.tel}
               Id={"tel"}
             />
           </S.Data>

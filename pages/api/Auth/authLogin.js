@@ -33,12 +33,7 @@ async function makeLogin(login) {
     where: {
       email: login.email 
     },
-    select: {
-      id: true,
-      name: true,
-      password: true,
-      company: true
-    },
+    include: {company: true}
  
   });
   console.log(user);
@@ -48,9 +43,9 @@ async function makeLogin(login) {
     console.log('nao deu')
     return "E-mail ou senhas invalidos";
   }
-  const newToken = await token(user);
+  const newToken = await token(user.id, user.name);
   console.log(newToken,'TOKEN')
-  return newToken;
+  return {newToken, user};
 }
 
 async function CheckPass(loginPass, passUser){

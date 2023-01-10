@@ -8,70 +8,39 @@ import InputSearch from "../../Componets/Inputs/InputSearch";
 import {
   faBuilding,
   faHouse,
-  faBookBookmark,
+  faBookmark,
   faSignIn,
   faMagnifyingGlass,
-} from "@fortawesome/pro-regular-svg-icons";
-import { getCookie } from "cookies-next";
-import { isValid } from "../../../src/jwt/isValidToken";
+} from "@fortawesome/pro-thin-svg-icons";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
 import DialogCreateOkr from "../../Componets/Modal";
 import userProfile from "../../../public/userProfile.svg";
-import axios from "axios";
-//import create from 'zustand'
+import useBearStore from "../../Util/zustand";
+import {Decode} from '../../../src/decodeBase64'
 
 export default function MainLayout({ children }) {
   const router = useRouter();
-  const [user, setUser] = useState({});
-  const [company, setCompany] = useState({});
-  const appToken = getCookie("userLogged") ?? null;
+  const [myUser, setMyUser] = useState()
+  const [myCompany, setMyCompany] = useState()
 
-  const payload = async (token) => {
-    const payload = await isValid(token);
-    getUser(payload?.user.id);
-    setCompany({
-      id: payload?.user.company.id,
-      name: payload?.user.company.name,
-    });
-  };
+  const user = useBearStore((state) => state.myUser) 
+  const company = useBearStore((state) => state.myCompany);
 
-  const getUser = async (id) => {
-    console.log(id, "ID");
-    await axios
-      .get("../api/Users/user?id=" + id)
-      .then(function (response) {
-        if (response.status === 200) {
-          return response.data,
-          setUser(response.data);
-          //console.log(response.data);
-          //setBase64code(response.data.imageProfile);
-        }
-      })
-      .catch((error) => {
-        return error, console.log("nao foii");
-      });
-  };
+  console.log(user)
+
   const logout = () => {
     deleteCookie("userLogged");
     router.push("/login");
-  };
-  /*const myUser = create((set) => ({
-    myUser: user,
-    get: async () => {const update = await getUser(user.id)
-    set(state => ({ update }));
-    },
-  }))
-  console.log(myUser,'USERRR')*/
-  const imageProfile = user.imageProfile ?? userProfile;
-  useEffect(() => {
-    payload(appToken);
-  }, []);
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
- 
+  }
+  // console.log(myUser,'USERRR')
+  const imageProfile = myUser?.imageProfile ?? userProfile;
+  useEffect(()=>{
+     setMyUser(() => Decode(user))
+  },[user])
+  useEffect(()=>{
+    setMyCompany(() => Decode(company))
+ },[company])
   return (
     <S.Container>
       <S.Main>
@@ -90,8 +59,8 @@ export default function MainLayout({ children }) {
             />
             <ButtonMain
               Route={"/sectors"}
-              Icon={faBookBookmark}
-              Text={"Setor"}
+              Icon={faBookmark}
+              Text={"Setores"}
               onClick={() => {
                 router.push("/sectors");
               }}
@@ -101,15 +70,15 @@ export default function MainLayout({ children }) {
             <ButtonMain
               Route={"/profile/user"}
               image={imageProfile}
-              Text={user.name}
+              Text={myUser?.name}
               onClick={() => {
                 router.push("/profile/user");
               }}
             />
-             <ButtonMain
+            <ButtonMain
               Route={"/profile/company"}
               Icon={faBuilding}
-              Text={company.name}
+              Text={myCompany?.name}
               onClick={() => {
                 router.push("/profile/company");
               }}
@@ -120,7 +89,6 @@ export default function MainLayout({ children }) {
               Text={"Sair do Gestor OKR"}
               onClick={logout}
             />
-           
           </S.Footer>
         </S.Options>
       </S.Main>
@@ -132,7 +100,7 @@ export default function MainLayout({ children }) {
               Icon={faMagnifyingGlass}
             />
           </S.Search>
-          <DialogCreateOkr user={user.id} company={company.id} />
+          <DialogCreateOkr user={myUser?.id} company={myCompany?.id} />
         </S.Header>
         {/*showSearch ?  <SearchList result={result} getSearch={getSearch} search={search}/> : <article>{children}</article> */}
         <article>{children}</article>
@@ -140,4 +108,3 @@ export default function MainLayout({ children }) {
     </S.Container>
   );
 }
-

@@ -3,123 +3,106 @@ import * as S from "../../assets/Styles/Profiles/user";
 import EditInput from "../../assets/Componets/Inputs/EditInput";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { isValid } from "../../src/jwt/isValidToken";
 import settingsCss from "../../Util/SettingsCss";
-import { getCookie } from "cookies-next";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import Image from "next/image";
 import userProfile from '../../public/userProfile.svg'
 import cpfMask from "../../assets/Mask/cpfMask";
 import phoneMask from "../../assets/Mask/phoneMask";
-//import { useStore } from '../../assets/Layout/MainLayout'
+import useBearStore from "../../assets/Util/zustand"
+import {Decode , Encode} from "../../src/decodeBase64";
+
 export default function ProfileUser() {
   // const router = useRouter();
   const [tabPass, setTabPass] = useState(false);
-  const [user, setUser] = useState({
-    name: "",
-    cpf: "",
-    tel: "",
-    email: "",
-    password: "",
-    passwordCurrent: "",
-    newPassword1: "",
-    newPassword2: "",
-  });
-  //const {myUser ,get } = useStore()
-  //console.log(myUser,'MYUSER')
-  const appToken = getCookie("userLogged") ?? null;
-
-  const Payload = async (token) => {
-    const payload = await isValid(token);
-    console.log(payload.user, "++");
-    getUser(payload.user.id);
-  };
-
-  const getUser = async (id) => {
-    console.log(id, "ID");
-    await axios
-      .get("../api/Users/user?id=" + id)
-      .then(function (response) {
-        if (response.status === 200) {
-          setUser(response.data);
-          console.log(response.data);
-          //setBase64code(response.data.imageProfile);
-        }
-      })
-      .catch((error) => {
-        return error, console.log("nao foii");
-      });
-  };
+  
+  const [myUser, setMyUser] = useState()
+  const user = useBearStore((state) => state.myUser) 
+  const setUser = useBearStore((state) => state.setUser) 
 
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
     if(key === 'cpf'){
-      setUser((user) => ({
-          ...user,
-          
-          [key]: cpfMask(value),
-      }));
+     setMyUser(({
+      ...myUser,
+        [key]: cpfMask(value),
+      }))
+     
     }else if(key === "tel"){
       value.length < 16
-      ? setUser((user) => ({
-        ...user,
+      ? setMyUser(({
+        ...myUser,
 
         [key]: phoneMask(value),
       }))
       : null
   }else{
-      setUser((user) => ({
-          ...user,
+      setMyUser(({
+          ...myUser,
           
           [key]: value,
       }));
   }
   };
 
-  const submitData = (prop) => {
-    const newData = { id: user.id, [prop]: user[prop] };
-    axios
+  const submitData = async (prop) => {
+    const newData = { id: myUser.id, [prop]: myUser[prop] };
+    await axios
       .put("../api/Users/user", {
         data: newData,
       })
       .then(function (response) {
         console.log("+++", response);
-        Payload(appToken);
+        setUser(Encode(myUser))
       })
       .catch((error) => {
         console.log(error);
-        //router.push("/login");
+        
       });
   };
 
   const handlePassword = async () => {
-    if (user.newPassword1 == user.newPassword2) {
+    if (myUser.newPassword1 == myUser.newPassword2) {
       const newPass = {
-        id: user.id,
-        newPassword: user.newPassword1,
-        currentPassword: user.passwordCurrent,
-        bdPassword: user.password,
+        id: myUser.id,
+        newPassword: myUser.newPassword1,
+        currentPassword: myUser.passwordCurrent,
+        bdPassword: myUser.password,
       };
       await axios
         .put("../api/Users/password", {
           data: newPass,
         })
         .then(function (response) {
+          
           console.log("+++", response);
-          Payload(appToken);
-          setUser({
-            ...user,
+          setMyUser({
+            ...myUser,
             passwordCurrent: "",
             newPassword1: "",
             newPassword2: "",
           });
+          for( let data in myUser){
+            if(data == 'passwordCurrent' || data == 'newPassword1' || data == 'newPassword2' ){
+              delete myUser[data]
+            }
+          }
+          setMyUser(myUser)
+      
         })
         .catch((error) => {
+          if(error.response.data == 'Senha atual invalida'){
+            alert(error.response.data)
+            return
+          }
           console.log(error);
-          //router.push("/login");
+          
         });
+    }else{
+      alert('A nova senha não correponde a sua confirmação')
+      return
     }
   };
 
@@ -134,24 +117,28 @@ export default function ProfileUser() {
 
       await axios
         .put("../api/Users/user", {
-          data: { id: user.id, imageProfile: reader.result },
+          data: { id: myUser.id, imageProfile: reader.result },
         })
         .then(function (response) {
           console.log("+++", response);
-          getUser(user.id);
+          setMyUser(({
+            ...myUser,
+            
+            imageProfile: reader.result,
+        }));
+        setUser(Encode(myUser))
+       
         })
         .catch((error) => {
           console.log(error);
         });
     };
   }
+  const imageProgile = myUser?.imageProfile ?? userProfile 
   
-  useEffect(() => {
-    Payload(appToken);
-  }, []);
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  useEffect(()=>{
+    setMyUser(() => Decode(user))
+ },[user])
 
   return (
     <S.Container>
@@ -184,7 +171,7 @@ export default function ProfileUser() {
           <S.ImageDiv>
             <S.Image>
               <Image
-                src={user.imageProfile ?? userProfile }
+                src={imageProgile}
                 alt="Select image"
                 width="200"
                 height="200"
@@ -201,7 +188,7 @@ export default function ProfileUser() {
               Label={"Nome Completo"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={user.name}
+              Value={myUser?.name}
               Id={"name"}
             />
             <EditInput
@@ -209,7 +196,7 @@ export default function ProfileUser() {
               Label={"Documento Fiscal (CPF)"}
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
-              Value={user.cpf}
+              Value={myUser?.cpf}
               onChange={handleOnChange}
               Id={"cpf"}
             />
@@ -219,12 +206,12 @@ export default function ProfileUser() {
               Placeholder={"Clique aqui para informar"}
               Type={"text"}
               onChange={handleOnChange}
-              Value={user.tel}
+              Value={myUser?.tel}
               Id={"tel"}
             />
 
             <span>
-              Meu E-mail<text>{user.email}</text>
+              Meu E-mail<text>{myUser?.email}</text>
             </span>
           </S.Data>
         </S.Profile>
@@ -236,7 +223,7 @@ export default function ProfileUser() {
             Label={"Senha atual"}
             Type={"password"}
             onChange={handleOnChange}
-            Value={user.passwordCurrent}
+            Value={myUser?.passwordCurrent}
             Id={"passwordCurrent"}
           />
           <EditInput
@@ -244,7 +231,7 @@ export default function ProfileUser() {
             Label={"Nova senha"}
             Type={"password"}
             onChange={handleOnChange}
-            Value={user.newPassword1}
+            Value={myUser?.newPassword1}
             Id={"newPassword1"}
           />
           <EditInput
@@ -252,7 +239,7 @@ export default function ProfileUser() {
             Label={"Confirme a nova senha"}
             Type={"password"}
             onChange={handleOnChange}
-            Value={user.newPassword2}
+            Value={myUser?.newPassword2}
             Id={"newPassword2"}
           />
           <ButtonSubmit

@@ -9,7 +9,7 @@ const createSector = async (sector) => {
     const newSector = await prisma.sectors.create({
       data: {
         name: sector.name,
-        company_id: sector.companyId,
+        company_id: sector.company_id,
       },
     });
     console.log(newSector);
@@ -100,7 +100,7 @@ export default async function handler(request, response) {
 
   if (method == "POST") {
     try {
-      const message = await createSector(request.body.data);
+      const message = await createSector(request.body.data.sector);
       response.status(200).json(message);
     } catch (err) {
       console.log(err);
