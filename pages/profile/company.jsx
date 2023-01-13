@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import axios from "axios";
-import settingsCss from "../../Util/SettingsCss";
+import settingsCss from "../../assets/Util/SettingsCss";
 import UserItem from "../../assets/Componets/UserItem";
 import DynamicInput from "../../assets/Componets/Inputs/DynamicInput";
 import cnpjMask from "../../assets/Mask/cnpjMask";

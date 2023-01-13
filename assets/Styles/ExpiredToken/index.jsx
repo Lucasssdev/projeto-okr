@@ -1,4 +1,4 @@
-import settingsCss from "../../../Util/SettingsCss";
+import settingsCss from "../../Util/SettingsCss";
 import styled from "styled-components";
 
 export const Container = styled.div`

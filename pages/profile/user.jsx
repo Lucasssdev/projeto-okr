@@ -55,7 +55,6 @@ export default function ProfileUser() {
       })
       .then(function (response) {
         console.log("+++", response);
-        setUser(Encode(myUser))
       })
       .catch((error) => {
         console.log(error);
@@ -126,19 +125,26 @@ export default function ProfileUser() {
             
             imageProfile: reader.result,
         }));
-        setUser(Encode(myUser))
+        
        
         })
         .catch((error) => {
           console.log(error);
         });
+
     };
+    
   }
   const imageProgile = myUser?.imageProfile ?? userProfile 
   
   useEffect(()=>{
     setMyUser(() => Decode(user))
+    console.log(user)
  },[user])
+ useEffect(()=>{
+  setUser(Encode(myUser))
+  console.log(myUser)
+},[myUser])
 
   return (
     <S.Container>

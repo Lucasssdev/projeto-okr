@@ -2,20 +2,25 @@
 import React from "react";
 import * as S from './styles'
 
-const SectorCard = ({item}) => {
+const SectorCard = ({item, setModalSector, setSectorSelected, sectorInfo, index}) => {
     console.log(item)
+    const handleOnSector = () => {
+        setSectorSelected({...item, index})
+        setModalSector(true)
+        console.log(index)
+    }
     return(
-        <S.Card>
-            <S.Title>
-                <span>{item.name}</span>
+        <S.Card >
+            {!sectorInfo ? <><S.Title >
+                <span onClick={handleOnSector}>{item.name}</span>
                 <small>ativo <strong>desde <br/>{item.createdIn.split('T')[0].split('-').reverse().join('/')}</strong></small>
             
             </S.Title>
             <S.Infos>
                 <S.Gestor>gestor:foto nome</S.Gestor>
                 
-                <small>Ver mais...</small>
-            </S.Infos>
+                <small onClick={handleOnSector}>Ver mais...</small>
+            </S.Infos></> : sectorInfo}
         </S.Card>
     ) 
 }

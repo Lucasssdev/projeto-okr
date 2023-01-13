@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/pro-thin-svg-icons";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
-import DialogCreateOkr from "../../Componets/Modal";
+import DialogCreateOkr from "../../Componets/ModalOkr";
 import userProfile from "../../../public/userProfile.svg";
 import useBearStore from "../../Util/zustand";
 import {Decode} from '../../../src/decodeBase64'

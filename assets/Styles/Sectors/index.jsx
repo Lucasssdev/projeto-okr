@@ -1,4 +1,4 @@
-import settingsCss from "../../Util/SettingsCss";
+//import settingsCss from "../../Util/SettingsCss";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -17,13 +17,14 @@ export const Header = styled.div`
 export const Title = styled.span`
     text-transform: uppercase;
     font-size: 32px;
-
-
-
+    display:  flex;
+    gap: 5px;
 `
 export const Sectors = styled.div`
     display: grid;
-    grid-template-columns: auto auto auto;
-    justify-content: space-around;
+    grid-template-columns: repeat(auto-fit, minmax(33.3%, 1fr));
+    place-items: center;
+    //background-color: blue;
+    width:100% ;
     
 `

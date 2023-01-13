@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-//import axios from "axios";
+import sendEmail from "../NodeMailer/nodeMailer";
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+
+
 export const config = {
   api: {
     bodyParser: {
@@ -55,7 +57,7 @@ const createUser = async (users) => {
    await prisma.$connect()
     let registered = 0
     try {
-     
+      
       users.team.map(async (email) => {
         console.log(email);
         const newUser = {
@@ -66,10 +68,11 @@ const createUser = async (users) => {
           permission: "3",
         };
         console.log(newUser)
-        const user = await prisma.users.create({
+        await sendEmail(newUser)
+        /*const user = await prisma.users.create({
           data: newUser
         });
-        console.log(user)
+        console.log(user)*/
        registered++
         
       });

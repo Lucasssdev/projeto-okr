@@ -30,6 +30,7 @@
     "js-base64": "^3.7.4",
     "jsonwebtoken": "^8.5.1",
     "next": "13.0.7",
+    "nodemailer": "^6.8.0",
     "prisma": "^4.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -23,6 +23,13 @@ export const Title = styled.span`
     font-size: 10px;
     padding-right: 20px;
    }
+   span{
+    &:hover{
+        cursor: pointer;
+        color: #d7d7d7;
+    }
+   }
+   
 `
 export const Infos = styled.div`
     font-size: 13px;
@@ -33,6 +40,10 @@ export const Infos = styled.div`
     small{
         align-self: flex-end;
         text-transform: none;
+        &:hover{
+        cursor: pointer;
+        color: #d7d7d7;
+    }
     }
    
 `

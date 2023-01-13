@@ -7,10 +7,11 @@ export const Div = styled.div`
     align-items: center;
     padding: 5px 15px;
     display: flex;
-    width: 340px;
-    height: 45px;
+    width: ${props => props.underline ? 'auto' : '340px'};
+    height: ${props => props.underline ? 'auto' : '45px'};
     background: ${settingsCss.colorThird};
     border-radius: 4px;
+    border-bottom: ${props => props.underline ? 'solid 1px #fff' : null} !important;
    
     
 `

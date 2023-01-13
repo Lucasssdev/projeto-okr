@@ -5,12 +5,12 @@ import React from 'react';
 
 
 // eslint-disable-next-line react/prop-types
-function Input({Placeholder, Icon}){
+function Input({Placeholder, Icon, underline}){
     return(
-        <S.Div>
+        <S.Div underline={underline}>
             <S.Input placeholder={Placeholder}/>
             <S.Icon> 
-                <FontAwesomeIcon icon={Icon} size="lg"/>
+                <FontAwesomeIcon  icon={Icon} size="lg"/>
             </S.Icon>
         </S.Div>
     )
