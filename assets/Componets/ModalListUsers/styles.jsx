@@ -1,23 +1,19 @@
 import styled from "styled-components";
 import settingsCss from "../../Util/SettingsCss";
 
-export const ListToColabs = styled.div`
-    height: 300px;
-    width: 250px;
-    background-color:${settingsCss.colorThird};
-    z-index: 998 !important;
-    position: absolute;
-    padding: 10px;
-    border-radius: 12px;
-    border-top-left-radius: 0px;
-    left: calc(${(props) => props.coordinates?.xColab}px + 35px);
-    top: calc(${(props) => props.coordinates?.yColab}px + 35px);
+export const Container = styled.div`
+    width: 100vw;;
+    height: 100vh;
+    position: fixed;
+    z-index: 98;
+    top: 0;
+    left: 0;
 `;
 export const ListToGest = styled.div`
     height: 350px;
     width: 250px;
     background-color:${settingsCss.colorThird};
-    z-index: 998 !important;
+    z-index: 99 !important;
     position: absolute;
     padding: 10px;
     border-radius: 12px;

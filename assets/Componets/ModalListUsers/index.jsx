@@ -10,15 +10,20 @@ import userProfile from "../../../public/userProfile.svg";
 
 //import { useState, useEffect } from "react";
 
-const ModalListUser = ({ setShowListUsers,  coordinatesY,  coordinatesX, userOnSector }) => {
+const ModalListUser = ({
+  setShowListUsers,
+  coordinatesY,
+  coordinatesX,
+  userOnSector,
+}) => {
   const closeList = () => {
     setShowListUsers(false);
   };
 
   return (
-    <S.CancelZone >
-      <S.ListToGest  coordinatesY={coordinatesY}
-          coordinatesX={coordinatesX}>
+    <S.Container>
+      <S.CancelZone onClick={closeList}></S.CancelZone>
+      <S.ListToGest coordinatesY={coordinatesY} coordinatesX={coordinatesX}>
         <Input
           underline={true}
           Placeholder={"Pesquisar pessoa"}
@@ -37,7 +42,7 @@ const ModalListUser = ({ setShowListUsers,  coordinatesY,  coordinatesX, userOnS
                       alt="Select image"
                       width="25"
                       height="25"
-                      onClick={closeList}
+                      
                     />
                     <S.Name>{firstLetterUppercase(user.name)}</S.Name>
                   </S.User>
@@ -66,7 +71,7 @@ const ModalListUser = ({ setShowListUsers,  coordinatesY,  coordinatesX, userOnS
           </S.Div>
         </S.Users>
       </S.ListToGest>
-    </S.CancelZone>
+    </S.Container>
   );
 };
 export default ModalListUser;
