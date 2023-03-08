@@ -16,7 +16,7 @@ export default function ExpiredToken() {
   return (
     <S.Container>
       <FontAwesomeIcon icon={faFaceDizzy} size="9x" />
-      <h1>Sua sessão foi expirada!</h1>
+      <h1>Sua sesso foi expirada!</h1>ã
       <p>Faça login para continuar...</p>
     </S.Container>
   );

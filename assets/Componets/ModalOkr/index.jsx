@@ -7,15 +7,13 @@ import {
   faArrowRight,
   faTextWidth,
   faXmark,
-  faCalendar
+  faCalendar,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Input from "../Inputs/Input";
 import ButtonSubmit from "../Buttons/ButtonSubmit";
 
-
 function DialogCreateOkr(IDs) {
-  console.log(IDs);
   const [showModal, setShowModal] = useState(false);
   const [okr, setOkr] = useState({
     name: "",
@@ -52,9 +50,8 @@ function DialogCreateOkr(IDs) {
         data: okr,
       })
       .then(function (response) {
-        console.log(response);
         //setShowModal(false);
-
+        console.log(response)
         setOkr({
           name: "",
           description: "",
@@ -68,9 +65,7 @@ function DialogCreateOkr(IDs) {
       });
   };
 
-  useEffect(() => {
-    console.log(okr);
-  }, [okr]);
+  useEffect(() => {}, [okr]);
 
   return (
     <S.Container>

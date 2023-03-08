@@ -17,7 +17,6 @@ export default function Sectors() {
   const [team, setTeam] = useState([]);
 
   const getTeam = async (id) => {
-    console.log(id, "ID");
     await axios
       .get("../api/Users/user?companyId=" + id)
       .then(function (response) {
@@ -27,11 +26,10 @@ export default function Sectors() {
         }
       })
       .catch((error) => {
-        return error, console.log("nao foii");
+        return error, console.log(error);
       });
   };
   const getSectors = async (id) => {
-    console.log(id, "ID");
     await axios
       .get("../api/Sectors/sector?companyId=" + id)
       .then(function (response) {
@@ -41,12 +39,12 @@ export default function Sectors() {
         }
       })
       .catch((error) => {
-        return error, console.log("nao foii");
+        return error, console.log(error);
       });
   };
 
   const createSector = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (sector.name != "") {
       await axios
         .post("../api/Sectors/sector", {
@@ -72,16 +70,14 @@ export default function Sectors() {
   };
 
   useEffect(() => {
-    console.log(sectorSelected);
-  }, [sectorSelected]);
-  useEffect(() => {
-    console.log(team);
-  }, [team]);
-  useEffect(() => {
     if (myCompany) {
       setCompany(() => Decode(myCompany));
     }
   }, [myCompany]);
+  useEffect(() => {
+   
+    console.log(team, allSector)
+  }, [team]);
   useEffect(() => {
     if (company) {
       getSectors(company.id);
@@ -89,7 +85,7 @@ export default function Sectors() {
         name: "",
         company_id: company.id,
       });
-      getTeam(company.id)
+      getTeam(company.id);
     }
   }, [company]);
   return (
@@ -97,7 +93,11 @@ export default function Sectors() {
       <S.Header onClick={() => setModalSector(false)}>
         <S.Title>
           meus <strong>setores</strong>
-          <DialogCreateSector setSector={setSector} createSector={createSector} sector={sector}/>
+          <DialogCreateSector
+            setSector={setSector}
+            createSector={createSector}
+            sector={sector}
+          />
         </S.Title>
       </S.Header>
       <S.Sectors>
@@ -110,6 +110,9 @@ export default function Sectors() {
                 setModalSector={setModalSector}
                 setSectorSelected={setSectorSelected}
                 item={sector}
+                allUsers={team}
+                getTeam={setTeam}
+                getSector={setAllSector}
               />
             ))}
           </>
@@ -118,7 +121,9 @@ export default function Sectors() {
             company={company}
             setModalSector={setModalSector}
             sector={sectorSelected}
-            userOnSector={team}
+            allUsers={team}
+            getTeam={setTeam}
+            getSector={setAllSector}
           />
         )}
       </S.Sectors>

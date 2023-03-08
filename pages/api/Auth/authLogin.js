@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 async function makeFirstLogin(id) {
-  console.log(id);
 
   const user = await prisma.users.findFirst({
     where: {
@@ -14,7 +13,6 @@ async function makeFirstLogin(id) {
    
     include: { company: true},
   });
-  console.log(user);
  
  
   if (!user) {
@@ -27,7 +25,6 @@ async function makeFirstLogin(id) {
 }
 
 async function makeLogin(login) {
-  console.log(login);
 
   const user = await prisma.users.findFirst({
     where: {
@@ -36,9 +33,7 @@ async function makeLogin(login) {
     include: {company: true}
  
   });
-  console.log(user);
   const checkPass = await CheckPass(login.password, user.password)
-  console.log(checkPass,'*******')
   if (!user || !checkPass) {
     console.log('nao deu')
     return "E-mail ou senhas invalidos";

@@ -7,44 +7,43 @@ import settingsCss from "../../assets/Util/SettingsCss";
 import ButtonSubmit from "../../assets/Componets/Buttons/ButtonSubmit";
 import { faArrowRight } from "@fortawesome/pro-thin-svg-icons";
 import Image from "next/image";
-import userProfile from '../../public/userProfile.svg'
+import userProfile from "../../public/userProfile.svg";
 import cpfMask from "../../assets/Mask/cpfMask";
 import phoneMask from "../../assets/Mask/phoneMask";
-import useBearStore from "../../assets/Util/zustand"
-import {Decode , Encode} from "../../src/decodeBase64";
+import useBearStore from "../../assets/Util/zustand";
+import { Decode, Encode } from "../../src/decodeBase64";
 
 export default function ProfileUser() {
   // const router = useRouter();
   const [tabPass, setTabPass] = useState(false);
-  
-  const [myUser, setMyUser] = useState()
-  const user = useBearStore((state) => state.myUser) 
-  const setUser = useBearStore((state) => state.setUser) 
+
+  const [myUser, setMyUser] = useState();
+  const user = useBearStore((state) => state.myUser);
+  const setUser = useBearStore((state) => state.setUser);
 
   const handleOnChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
-    if(key === 'cpf'){
-     setMyUser(({
-      ...myUser,
+    if (key === "cpf") {
+      setMyUser({
+        ...myUser,
         [key]: cpfMask(value),
-      }))
-     
-    }else if(key === "tel"){
+      });
+    } else if (key === "tel") {
       value.length < 16
-      ? setMyUser(({
+        ? setMyUser({
+            ...myUser,
+
+            [key]: phoneMask(value),
+          })
+        : null;
+    } else {
+      setMyUser({
         ...myUser,
 
-        [key]: phoneMask(value),
-      }))
-      : null
-  }else{
-      setMyUser(({
-          ...myUser,
-          
-          [key]: value,
-      }));
-  }
+        [key]: value,
+      });
+    }
   };
 
   const submitData = async (prop) => {
@@ -54,11 +53,10 @@ export default function ProfileUser() {
         data: newData,
       })
       .then(function (response) {
-        console.log("+++", response);
+        "+++", response;
       })
       .catch((error) => {
         console.log(error);
-        
       });
   };
 
@@ -75,7 +73,6 @@ export default function ProfileUser() {
           data: newPass,
         })
         .then(function (response) {
-          
           console.log("+++", response);
           setMyUser({
             ...myUser,
@@ -83,68 +80,62 @@ export default function ProfileUser() {
             newPassword1: "",
             newPassword2: "",
           });
-          for( let data in myUser){
-            if(data == 'passwordCurrent' || data == 'newPassword1' || data == 'newPassword2' ){
-              delete myUser[data]
+          for (let data in myUser) {
+            if (
+              data == "passwordCurrent" ||
+              data == "newPassword1" ||
+              data == "newPassword2"
+            ) {
+              delete myUser[data];
             }
           }
-          setMyUser(myUser)
-      
+          setMyUser(myUser);
         })
         .catch((error) => {
-          if(error.response.data == 'Senha atual invalida'){
-            alert(error.response.data)
-            return
+          if (error.response.data == "Senha atual invalida") {
+            alert(error.response.data);
+            return;
           }
           console.log(error);
-          
         });
-    }else{
-      alert('A nova senha não correponde a sua confirmação')
-      return
+    } else {
+      alert("A nova senha não correponde a sua confirmação");
+      return;
     }
   };
 
-
   async function handleImageChange(event) {
-    const file = event.target.files[0]
-    console.log(file);
+    const file = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = async () => {
-      console.log(reader);
-
       await axios
         .put("../api/Users/user", {
           data: { id: myUser.id, imageProfile: reader.result },
         })
         .then(function (response) {
-          console.log("+++", response);
-          setMyUser(({
+          console.log(response);
+          setMyUser({
             ...myUser,
-            
+
             imageProfile: reader.result,
-        }));
-        
-       
+          });
         })
         .catch((error) => {
           console.log(error);
         });
-
     };
-    
   }
-  const imageProgile = myUser?.imageProfile ?? userProfile 
-  
-  useEffect(()=>{
-    setMyUser(() => Decode(user))
-    console.log(user)
- },[user])
- useEffect(()=>{
-  setUser(Encode(myUser))
-  console.log(myUser)
-},[myUser])
+  const imageProgile = myUser?.imageProfile ?? userProfile;
+
+  useEffect(() => {
+    setMyUser(() => Decode(user));
+    console.log(user);
+  }, [user]);
+  useEffect(() => {
+    setUser(Encode(myUser));
+    console.log(myUser);
+  }, [myUser]);
 
   return (
     <S.Container>

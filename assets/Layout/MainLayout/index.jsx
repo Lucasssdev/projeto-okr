@@ -17,30 +17,27 @@ import { deleteCookie } from "cookies-next";
 import DialogCreateOkr from "../../Componets/ModalOkr";
 import userProfile from "../../../public/userProfile.svg";
 import useBearStore from "../../Util/zustand";
-import {Decode} from '../../../src/decodeBase64'
+import { Decode } from "../../../src/decodeBase64";
 
 export default function MainLayout({ children }) {
   const router = useRouter();
-  const [myUser, setMyUser] = useState()
-  const [myCompany, setMyCompany] = useState()
+  const [myUser, setMyUser] = useState();
+  const [myCompany, setMyCompany] = useState();
 
-  const user = useBearStore((state) => state.myUser) 
+  const user = useBearStore((state) => state.myUser);
   const company = useBearStore((state) => state.myCompany);
-
-  console.log(user)
 
   const logout = () => {
     deleteCookie("userLogged");
     router.push("/login");
-  }
-  // console.log(myUser,'USERRR')
+  };
   const imageProfile = myUser?.imageProfile ?? userProfile;
-  useEffect(()=>{
-     setMyUser(() => Decode(user))
-  },[user])
-  useEffect(()=>{
-    setMyCompany(() => Decode(company))
- },[company])
+  useEffect(() => {
+    setMyUser(() => Decode(user));
+  }, [user]);
+  useEffect(() => {
+    setMyCompany(() => Decode(company));
+  }, [company]);
   return (
     <S.Container>
       <S.Main>

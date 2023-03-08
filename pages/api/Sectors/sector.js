@@ -29,7 +29,7 @@ const getAllSector = async (companyId) => {
     where: {
       company_id: companyId,
     },
-    //include:{ company: true,}
+    include:{ users: true,}
   });
   await prisma.$disconnect();
   console.log(sectors);
@@ -43,6 +43,7 @@ const getSector = async (id) => {
     where: {
       id,
     },
+    include:{ users: true,}
   });
 
   return sector;

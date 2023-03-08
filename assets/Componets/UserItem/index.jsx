@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import * as S from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,10 +8,12 @@ import {
   faChessBishopPiece,
 } from "@fortawesome/pro-thin-svg-icons";
 import React from "react";
+import Image from "next/image";
+import userProfile from "../../../public/userProfile.svg";
 
-const UserItem = (data) => {
- // console.log(data.user);
-  const permission = data.user.permission;
+const UserItem = ({ user,sector }) => {
+  console.log(user);
+  const permission = user.permission;
   const iconPermission = (permission) => {
     return permission == "1"
       ? faChessBishopPiece
@@ -21,30 +25,44 @@ const UserItem = (data) => {
     return permission == "1" ? "ADM" : permission == "2" ? "GEST." : "COLAB.";
   };
   const colorIcon = (permission) => {
-    return permission == "1" ? "#FC9E2F" : permission == "2" ? "#25F9A0." : "#fff.";
+    const color =
+      permission == "1" ? "#FC9E2F" : permission == "2" ? "#25F9A0" : "#fff.";
+    return color;
   };
 
-  const nameArray = data.user.name.split(' ')
+  const nameArray = user.name.split(" ");
   const myName = {
     firtName: nameArray[0],
-    surname:  nameArray.length == 1 ? '' : nameArray[nameArray.length -1], 
+    surname: nameArray.length == 1 ? "" : nameArray[nameArray.length - 1],
+  };
 
-  }
- // console.log(myName)
   return (
     <S.Li>
-      <S.ImageDiv>
-        <S.Image>photo</S.Image>
-      </S.ImageDiv>
+      <S.Image>
+        <Image
+          src={user?.imageProfile ?? userProfile}
+          title={user.name}
+          alt="Select image"
+          width="70"
+          height="70"
+        />
+      </S.Image>
       <S.Data>
         <S.Icon>
-          <FontAwesomeIcon icon={iconPermission(permission)} color={colorIcon(permission)} size="2x" />
+          <FontAwesomeIcon
+            icon={iconPermission(permission)}
+            color={colorIcon(permission)}
+            size="2x"
+          />
           <span>{labelPermission(permission)}</span>
         </S.Icon>
         <S.Text>
-          <S.Name>{myName.firtName+' '}<text>{myName.surname}</text></S.Name>
-          <S.Officie>{data.user.Officie ?? "CARGO EMPRESA"}</S.Officie>
-          <S.Sector>Setor</S.Sector>
+          <S.Name>
+            {myName.firtName + " "}
+            <text>{myName.surname}</text>
+          </S.Name>
+          <S.Officie>{user.Officie ?? "CARGO EMPRESA"}</S.Officie>
+          <S.Sector>{sector?.name ?? user.sector.name}</S.Sector>
         </S.Text>
       </S.Data>
       <S.Score>

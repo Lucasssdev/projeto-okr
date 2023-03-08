@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { isValid } from "./src/jwt/isValidToken";
 
-
 export default async function middleware(request) {
+
   const cookie = request.cookies.get("userLogged")?.value ?? "";
-  // console.log('COOKIE: ',cookie, '\n',typeof cookie);
+
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/_next") || pathname.startsWith("/api"))
@@ -18,8 +18,10 @@ export default async function middleware(request) {
     "/register/updatePassword",
   ];
 
-  // console.log('pathname',pathname.toString());
-  if(request.nextUrl.pathname  == '/expiredToken' && request.cookies.has("userLogged")){
+  if (
+    request.nextUrl.pathname == "/expiredToken" &&
+    request.cookies.has("userLogged")
+  ) {
     return NextResponse.next();
   }
   if (!request.cookies.has("userLogged")) {
@@ -39,7 +41,6 @@ export default async function middleware(request) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } else {
-    return NextResponse.redirect(new URL("/expiredToken", request.url));
+    return NextResponse.redirect(new URL("/session-expired", request.url));
   }
- 
 }

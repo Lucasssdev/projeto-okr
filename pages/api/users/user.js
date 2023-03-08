@@ -100,12 +100,14 @@ const getAllUsers = async (companyId) => {
     where: {
       companyId: companyId,
     },
-    //include:{ company: true,}
+    
+    include:{ sector: true,}
   });
   await prisma.$disconnect();
   console.log(users,'USERS')
   return users;
 };
+
 const getUser = async (id) => {
   // console.log(id)
   await prisma.$connect();
@@ -164,6 +166,29 @@ const updateUser = async (user) => {
   console.log(user)
   let message = "";
   await prisma.$connect();
+  if(user.permission){
+    await prisma.users
+    .update({
+      where: {
+        id: user.id,
+      },
+      data: {
+       sectors_id: user.sectors_id,
+       permission: user.permission
+      },
+    })
+    .then(async () => {
+      console.log("Response from prisma ");
+      await prisma.$disconnect();
+      message = "Gestor alterado com sucesso";
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      message = "Falha ao alterar gestor";
+      process.exit(1);
+    });
+  }else{
   await prisma.users
     .update({
       where: {
@@ -184,6 +209,7 @@ const updateUser = async (user) => {
       message = "Falha ao alterar";
       process.exit(1);
     });
+  }
   return message;
 };
 

@@ -3,49 +3,43 @@ import settingsCss from "../../Util/SettingsCss";
 
 export const Li = styled.li`
   display: grid;
-  grid-template-columns: 8% 33% auto;
+  grid-template-columns: 75px auto auto;
   width: 97%;
   border-bottom: solid ${settingsCss.colorSecond};
   align-items: center;
   padding: 5px 0px 5px 20px;
-  gap: 5px;
-`;
-export const ImageDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-  a {
-    text-transform: uppercase;
-    font-weight: 400;
-    font-size: 16px;
-    &:hover {
-      color: ${settingsCss.colorDetails};
-      cursor: pointer;
+
+  
+  @media (max-width: 1290px){
+    grid-template-columns: 7% 33% auto;
+ 
     }
-  }
 `;
+
 export const Icon = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 55px;
-  padding-left: 15px;
-  svg {
-    color: ${(props) => props.color};
-  }
-  span {
-  }
+ // width: 55px;
+  padding: 0px 20px;
+
 `;
 export const Image = styled.div`
   background-color: ${settingsCss.colorDetails};
-  width: 70px;
-  height: 70px;
-  border-radius: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  border-radius: 100%;
+  padding: 1px;
+  img {
+    background-color:${settingsCss.colorThird};
+    border-radius: 50%;
+    object-fit: cover;
+   
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
 `;
 export const Data = styled.div`
   display: flex;
@@ -59,7 +53,7 @@ export const Text = styled.div`
 `;
 export const Name = styled.span`
   font-weight: 400;
-  font-size: 22px;
+  font-size: 20px;
   text-transform: capitalize;
 
   text {
@@ -69,14 +63,14 @@ export const Name = styled.span`
 `;
 export const Officie = styled.span`
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   text-transform: uppercase;
 `;
 export const Sector = styled.span`
   text-transform: uppercase;
   color: ${settingsCss.colorDetails};
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
 `;
 export const Score = styled.div`
   display: flex;
@@ -84,6 +78,7 @@ export const Score = styled.div`
   width: auto;
   padding: 0px;
 `;
+
 export const Box = styled.div`
   display: flex;
   flex-direction: column;
@@ -92,18 +87,26 @@ export const Box = styled.div`
   gap: 10px;
   padding: 10px 0px 15px 0px;
   background-color: ${settingsCss.colorThird};
-  width: 30%;
+  width: 110px;
   height: 30%;
   border-radius: 10px;
   color: ${settingsCss.colorDetails};
   font-weight: 700;
-  font-size: 46px;
+  font-size: 36px;
   span {
     color: white;
     display: flex;
     gap: 2px;
     font-weight: 200;
-    font-size: 14px;
+    font-size: 12px;
     text-transform: uppercase;
   }
+  @media (max-width: 1290px){
+       display: none;
+ 
+    }
+    @media (max-width: 1020px){
+       display: none;
+ 
+    }
 `;

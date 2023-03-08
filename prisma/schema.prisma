@@ -33,7 +33,7 @@ model users {
   companyId String
   company   company @relation(fields: [companyId], references: [id])
 
-  //Cada usuário pertence a uma empresa
+  //Cada usuário pertence a um setor
   sectors_id String?  @db.ObjectId
   sector     sectors? @relation(fields: [sectors_id], references: [id])
 
@@ -84,7 +84,7 @@ model sectors {
 
 model okrs {
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
-  name String?
+  nome String?
 
   manager_id String @db.ObjectId
   manager    users  @relation("Manager", fields: [manager_id], references: [id])

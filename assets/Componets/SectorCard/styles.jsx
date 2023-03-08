@@ -2,8 +2,8 @@ import settingsCss from "../../Util/SettingsCss";
 import styled from "styled-components";
 
 export const Card = styled.div`
-    height: 20vh;
-    width: 25vw;
+    height: 150px;
+    width: 90%;
     background-color: ${settingsCss.colorPrimary};
     border-radius: 10px;
     margin-bottom: 20px;

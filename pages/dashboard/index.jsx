@@ -4,6 +4,22 @@ import React from "react";
 import Description from "../../assets/Componets/Description";
 
 export default function DashBoard() {
+  function calculaPrestacao(valorEmprestimo, numeroParcelas, taxaJuros) {
+    //calcula juros
+    const juros = (taxaJuros / 100) * (numeroParcelas / 2) * valorEmprestimo;
+    //calcula valor total do emprestimo com juros
+    const valorTotal = valorEmprestimo + juros;
+    //calcula valor da prestação
+    const prestacao = valorTotal / numeroParcelas; //1.07% de iof
+    const valores = {
+      prestaçãoSemIof: prestacao.toFixed(2),
+      prestaçãoComIof: prestacao.toFixed(2) * 1.07,
+      acrecimoDeIof: ( prestacao * 1.07) -prestacao ,
+    };
+    return valores;
+  }
+
+  console.log("Valor", calculaPrestacao(10000   , 12, 5));
   return (
     <S.Div>
       <S.Colum1>
@@ -11,9 +27,7 @@ export default function DashBoard() {
           <h3>
             minhas <strong>atividades</strong>
           </h3>
-          {
-            //console.log(keys)
-          }
+          {}
           <Description text={"Descriçao da atividade"} />
           <Description text={"Descriçao da atividade"} />
           <Description text={"Descriçao da atividade"} />
@@ -51,7 +65,7 @@ export default function DashBoard() {
               <strong>tasks</strong> realizadas
             </span>
             <small>
-              2022 • q3 • <strong color='#F3426C'>+10</strong>
+              2022 • q3 • <strong color="#F3426C">+10</strong>
             </small>
           </S.Box>
           <S.Box>

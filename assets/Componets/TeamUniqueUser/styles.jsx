@@ -23,7 +23,7 @@ flex-direction: column;
 font-size: 13px;
 gap: 5px;
    img {
-    background-color: #a593f3;
+    background-color: ${settingsCss.coloTextMain};
     border-radius: 50%;
     object-fit: cover;
     margin-left: -12px;
@@ -43,7 +43,7 @@ padding-right:70px ;
 font-size: 13px;
 gap: 5px;
    img {
-    background-color: #a593f3;
+    background-color:${settingsCss.colorThird};
     border-radius: 50%;
     object-fit: cover;
     margin-left: -12px;

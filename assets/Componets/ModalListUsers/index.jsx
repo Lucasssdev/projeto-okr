@@ -14,16 +14,19 @@ const ModalListUser = ({
   setShowListUsers,
   coordinatesY,
   coordinatesX,
-  userOnSector,
+  setUserSelected,
+  allUsers,
 }) => {
+ 
   const closeList = () => {
     setShowListUsers(false);
   };
 
+ 
   return (
     <S.Container>
       <S.CancelZone onClick={closeList}></S.CancelZone>
-      <S.ListToGest coordinatesY={coordinatesY} coordinatesX={coordinatesX}>
+      <S.List coordinatesY={coordinatesY} coordinatesX={coordinatesX}>
         <Input
           underline={true}
           Placeholder={"Pesquisar pessoa"}
@@ -32,17 +35,16 @@ const ModalListUser = ({
         <S.Users>
           <S.Div>
             <S.Label>gestores</S.Label>
-            {userOnSector.map((user, key) => {
-              if (user.permission == "1") {
+            {allUsers.map((user, key) => {
+              if (user.permission == "2" || user.permission == "1" ) {
                 return (
-                  <S.User key={key}>
+                  <S.User onClick={() => setUserSelected(user.id)} key={key}>
                     <Image
                       src={user?.imageProfile ?? userProfile}
                       title={user.name}
                       alt="Select image"
                       width="25"
                       height="25"
-                      
                     />
                     <S.Name>{firstLetterUppercase(user.name)}</S.Name>
                   </S.User>
@@ -51,11 +53,11 @@ const ModalListUser = ({
             })}
           </S.Div>
           <S.Div>
-            <S.Label>gestores</S.Label>
-            {userOnSector.map((user, key) => {
+            <S.Label>colaboradores</S.Label>
+            {allUsers.map((user, key) => {
               if (user.permission == "3") {
                 return (
-                  <S.User key={key}>
+                  <S.User onClick={() => setUserSelected(user.id)} key={key}>
                     <Image
                       src={user?.imageProfile ?? userProfile}
                       title={user.name}
@@ -70,7 +72,7 @@ const ModalListUser = ({
             })}
           </S.Div>
         </S.Users>
-      </S.ListToGest>
+      </S.List>
     </S.Container>
   );
 };

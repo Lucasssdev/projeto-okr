@@ -25,7 +25,6 @@ export default function ProfileUser() {
   });
 
   const getTeam = async (id) => {
-    console.log(id, "ID");
     await axios
       .get("../api/Users/user?companyId=" + id)
       .then(function (response) {
@@ -72,7 +71,7 @@ export default function ProfileUser() {
         data: newData,
       })
       .then(function (response) {
-        console.log("+++", response);
+        console.log( response);
         setMyCompany(Encode(company))
       })
       .catch((error) => {
@@ -225,7 +224,11 @@ export default function ProfileUser() {
           </span>
           <section>
             <S.ListTeam>
-              {team.map((user, key) => (
+              {team.sort(function (a, b) {
+              const permissionA = a.permission;
+              const permissionB = b.permission;
+              return permissionA - permissionB;
+            }).map((user, key) => (
                 <UserItem user={user} key={key} />
               ))}
             </S.ListTeam>
